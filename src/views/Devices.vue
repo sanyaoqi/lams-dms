@@ -1,6 +1,7 @@
 <template style="height:100%">
   <div>
     <x-header :left-options="{showBack: false}">设备列表</x-header>
+    <!-- TODO 搜索逻辑 -->
     <search
       @result-click="resultClick"
       @on-change="getResult"
@@ -12,24 +13,30 @@
       @on-cancel="onCancel"
       @on-submit="onSubmit"
       ref="search"></search>
-    <button>筛选</button>
+    <!-- TODO 时间排序 筛选样式及逻辑 -->
+    <button @click="clickScreen">筛选</button>
     <view-box ref="viewBox">
-      <deviceitem v-for="device in devices" :device="device" :key="device.id">
-      </deviceitem>
+      <!-- TODO 列表样式调整 -->
+      <device-item v-for="device in devices" :device="device" :key="device.id + 'device'">
+      </device-item>
     </view-box>
+    <!-- 筛选弹框 -->
+    <screen-view id="screen" v-if="isScreenShow" :is-screen-show.sync="isScreenShow"></screen-view>
   </div>
 </template>
 
 <script>
 import { ViewBox, XHeader, Search } from 'vux'
 import DeviceItem from './DeviceItem'
+import ScreenView from './ScreenView'
 
 export default {
   components: {
     XHeader,
     Search,
     ViewBox,
-    'deviceitem': DeviceItem
+    DeviceItem,
+    ScreenView
   },
   methods: {
     formatDevice (device) {
@@ -69,6 +76,18 @@ export default {
     onCancel () {
       console.log('on cancel')
       this.devices = this.allDevices
+    },
+    clickScreen () {
+      this.isScreenShow = true
+      // document.getElementById('screen').style.display = 'block'
+    }
+  },
+  watch: {
+    isScreenShow: function (newVal, oldVal) {
+      console.log(newVal, 'isScreenShow', oldVal)
+      if (oldVal) {
+        // document.getElementById('screen').style.display = 'none'
+      }
     }
   },
   mounted () {
@@ -80,7 +99,7 @@ export default {
       .catch(error => {
         console.log(error)
         var arr = []
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 1; i++) {
           arr.push({
             'id': '1',
             'name': 'ivc',
@@ -116,7 +135,8 @@ export default {
     return {
       allDevices: [],
       devices: [],
-      searchText: ''
+      searchText: '',
+      isScreenShow: false
     }
   }
 }

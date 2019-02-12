@@ -6,19 +6,10 @@ import VueRouter from 'vue-router'
 import App from './App'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import Home from './components/Devices'
-import DeviceView from './components/DeviceView'
+import router from './router'
 
 Vue.use(VueAxios, axios)
 Vue.use(VueRouter)
-
-const routes = [
-{path: '/', component: Home},
-{path: '/deviceview/:id', component: DeviceView}]
-
-const router = new VueRouter({
-  routes
-})
 
 FastClick.attach(document.body)
 

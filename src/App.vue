@@ -16,5 +16,6 @@ export default {
 
 body {
   background-color: #fbf9fe;
+  z-index: 1;
 }
 </style>

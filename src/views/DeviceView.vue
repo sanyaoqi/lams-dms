@@ -1,6 +1,8 @@
 <template>
   <div>
+    <x-header>设备管理</x-header>
     <card v-if="device !== null">
+      <!-- TODO 卡片样式 -->
       <div slot="content" class="card-padding" >
         <p style="font-size:14px;line-height:1.2;">{{device.name}}</p>
         <p style="color:#999;font-size:12px;" >{{device.description}}</p>
@@ -11,9 +13,16 @@
        <tab :line-width=2 active-color='#fc378c' v-model="index">
         <tab-item class="vux-center" :selected="selected === item" v-for="(item, index) in list" @click="selected = item" :key="index">{{item}}</tab-item>
       </tab>
+      <!-- TODO 高度调整 -->
       <swiper v-model="index" height="100px" :show-dots="false">
-        <swiper-item v-for="(item, index) in list" :key="index">
-          <div class="tab-swiper vux-center">{{item}} Container</div>
+        <swiper-item>
+          <device-info></device-info>
+        </swiper-item>
+        <swiper-item>
+          <repair-list></repair-list>
+        </swiper-item>
+        <swiper-item>
+          <maintain-list></maintain-list>
         </swiper-item>
       </swiper>
     </div>
@@ -21,7 +30,10 @@
 </template>
 
 <script>
-import { Card, Tab, TabItem, Swiper, SwiperItem } from 'vux'
+import { Card, Tab, TabItem, Swiper, SwiperItem, XHeader } from 'vux'
+import DeviceInfo from './DeviceInfo'
+import MaintainList from './DeviceMaintainList'
+import RepairList from './DeviceRepairList'
 
 const list = () => ['详情信息', '维修记录', '维护记录']
 
@@ -32,7 +44,11 @@ export default {
     Tab,
     TabItem,
     Swiper,
-    SwiperItem
+    SwiperItem,
+    XHeader,
+    DeviceInfo,
+    MaintainList,
+    RepairList
   },
   data () {
     return {
