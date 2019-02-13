@@ -29,6 +29,7 @@
 import { ViewBox, XHeader, Search } from 'vux'
 import DeviceItem from './DeviceItem'
 import ScreenView from './ScreenView'
+import api from '@/api'
 
 export default {
   components: {
@@ -92,7 +93,7 @@ export default {
   },
   mounted () {
     this.axios
-      .get('http://api.lams.com/devices')
+      .get(api.devices)
       .then(response => {
         this.devices = response.data
       })

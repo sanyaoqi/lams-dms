@@ -40,9 +40,6 @@
 
 <script>
 import { Card, Tab, TabItem, Swiper, SwiperItem, XHeader } from 'vux'
-import DeviceInfo from './DeviceInfo'
-// import MaintainList from './DeviceMaintainList'
-// import RepairList from './DeviceRepairList'
 
 const list = () => ['详情信息', '维修记录', '维护记录']
 
@@ -55,8 +52,7 @@ export default {
     Swiper,
     SwiperItem,
     XHeader,
-    DeviceInfo,
-    // MaintainList,
+    DeviceInfo: () => import('./DeviceInfo'),
     MaintainList: () => import('./DeviceMaintainList'),
     RepairList: () => import('./DeviceRepairList')
   },
@@ -76,14 +72,6 @@ export default {
     }
   },
   mounted () {
-    // const that = this
-    // window.onresize = () => {
-    //   return (() => {
-    //     window.fullHeight = (document.documentElement.clientHeight - document.documentElement.clientWidth * 0.4) / document.documentElement.clientWidth
-    //     that.fullHeight = window.fullHeight
-    //     console.log('that.fullHeight --->>>', that.fullHeight)
-    //   })()
-    // }
     this.axios
       .get('http://api.lams.com/devices/' + this.$route.params.id)
       .then(response => {
@@ -173,8 +161,6 @@ export default {
     padding-bottom: 80%;
     display:block;
     flex: 0 0 auto;
-    /*text-align: left;*/
-    /*vertical-align:middle;*/
   }
   img {
     position: absolute; // 使用绝对定位position: absolute;
@@ -183,8 +169,5 @@ export default {
     transform: translate(-50%,-50%);
     width: 100%; // 宽高为容器的宽高
     height: auto;
-    /*flex: 0 0 auto;*/
-    /*text-align: left;*/
-    /*vertical-align:middle;*/
   }
 </style>
