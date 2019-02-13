@@ -2,8 +2,8 @@
   <div>
     <x-header>设备管理</x-header>
     <div class="weui-flex">
-      <div class="weui-flex__item"><div class="placeholder">
-        <div class="weui-panel__bd">
+      <div class="weui-flex__item"><div class="placeholder device-detail-info-bg">
+        <div class="weui-panel__bd device-detail-info">
           <div class="weui-media-box weui-media-box_text" v-if="device !== null">
             <h2 class="weui-media-box__title">{{device.name}}</h2>
             <p class="weui-media-box__desc">{{device.description}}</p>
@@ -14,7 +14,7 @@
         </div>
       </div></div>
       <div class="weui-flex__item"><div class="placeholder">
-        <div id="imgBg" style="">
+        <div id="img-bg" style="">
           <img slot="header" :src="device.images" v-if="device !== null">
         </div>
       </div></div>
@@ -154,7 +154,20 @@ export default {
     height: 100%;
     width: 100%;
   }
-  #imgBg {
+  .device-detail-info-bg {
+    position: relative; // 使用相对定位
+    height: 0; // 高度设置为0，使用padding来设置高度
+    width: 100%;
+    padding-bottom: 80%;
+    display:block;
+    flex: 0 0 auto;
+  }
+  .device-detail-info {
+    position: absolute;
+    top:50%;
+    transform: translate(0,-50%);
+  }
+  #img-bg {
     position: relative; // 使用相对定位
     height: 0; // 高度设置为0，使用padding来设置高度
     width: 80%;

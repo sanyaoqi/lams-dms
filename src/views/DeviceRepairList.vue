@@ -1,25 +1,31 @@
 <template style="height:100%;">
-  <div style="height:100%;">
-    <view-box>
-      <!-- TODO 列表样式调整 -->
-      <device-repair-item v-for="repair in repairs" :repair="repair" :key="repair.id + 'repair'">
-      </device-repair-item>
-    </view-box>
-    <router-link tag="li" to="/add-repair">
+  <div style="overflow-y: hidden;">
+    <group style="height:100%; overflow-y: scroll;" :gutter="0">
+      <cell-box
+        v-for="repair in repairs"
+        :key="repair.id + 'repair'"
+        :link="'/repair-detail/' + repair.id"
+        is-link>
+        <device-repair-item :repair="repair"></device-repair-item>
+      </cell-box>
+    </group>
+    <router-link to="/add-repair">
       <button id="add-repair">添加</button>
     </router-link>
   </div>
 </template>
 
 <script>
-  import { ViewBox } from 'vux'
+  import { Group, Cell, CellBox } from 'vux'
   import DeviceRepairItem from './DeviceRepairItem'
   import DeviceAddRepair from './DeviceAddRepair'
 
   export default {
     name: 'DeviceRepairList',
     components: {
-      ViewBox,
+      Group,
+      Cell,
+      CellBox,
       DeviceRepairItem,
       DeviceAddRepair
     },
@@ -68,19 +74,17 @@
 </script>
 
 <style scoped>
-  html, body {
-    height: 100%;
-    width: 100%;
-    overflow-x: hidden;
-  }
   #add-repair {
-    right: 20px;
+    right: 30px;
     bottom: 40px;
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     background-color: aqua;
     z-index: 1000;
     display: block;
     position: fixed;
   }
 </style>
+
+
+
