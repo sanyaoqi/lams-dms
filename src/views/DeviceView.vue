@@ -4,7 +4,7 @@
     <div class="weui-flex">
       <div class="weui-flex__item"><div class="placeholder">
         <div class="weui-panel__bd">
-          <div class="weui-media-box weui-media-box_text">
+          <div class="weui-media-box weui-media-box_text" v-if="device !== null">
             <h2 class="weui-media-box__title">{{device.name}}</h2>
             <p class="weui-media-box__desc">{{device.description}}</p>
             <p class="weui-media-box__desc">{{device.created_at}}</p>
@@ -15,7 +15,7 @@
       </div></div>
       <div class="weui-flex__item"><div class="placeholder">
         <div id="imgBg" style="">
-          <img slot="header" :src="device.images">
+          <img slot="header" :src="device.images" v-if="device !== null">
         </div>
       </div></div>
     </div>
@@ -41,8 +41,8 @@
 <script>
 import { Card, Tab, TabItem, Swiper, SwiperItem, XHeader } from 'vux'
 import DeviceInfo from './DeviceInfo'
-import MaintainList from './DeviceMaintainList'
-import RepairList from './DeviceRepairList'
+// import MaintainList from './DeviceMaintainList'
+// import RepairList from './DeviceRepairList'
 
 const list = () => ['详情信息', '维修记录', '维护记录']
 
@@ -56,8 +56,9 @@ export default {
     SwiperItem,
     XHeader,
     DeviceInfo,
-    MaintainList,
-    RepairList
+    // MaintainList,
+    MaintainList: () => import('./DeviceMaintainList'),
+    RepairList: () => import('./DeviceRepairList')
   },
   data () {
     return {

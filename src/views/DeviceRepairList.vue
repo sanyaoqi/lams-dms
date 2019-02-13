@@ -5,7 +5,7 @@
       <device-repair-item v-for="repair in repairs" :repair="repair" :key="repair.id + 'repair'">
       </device-repair-item>
     </view-box>
-    <router-link tag="li" to="/foo">
+    <router-link tag="li" to="/add-repair">
       <button id="add-repair">添加</button>
     </router-link>
   </div>
