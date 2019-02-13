@@ -47,7 +47,6 @@
             })
           }
           this.repairs = arr
-          console.log(this.repairs)
         })
         .finally()
     },

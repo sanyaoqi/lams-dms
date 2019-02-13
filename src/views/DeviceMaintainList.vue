@@ -48,7 +48,6 @@
             })
           }
           this.maintains = arr
-          console.log(this.maintains)
         })
         .finally()
     },
