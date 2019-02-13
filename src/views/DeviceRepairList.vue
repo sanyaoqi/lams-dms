@@ -1,46 +1,53 @@
-<template>
-  <div>
+<template style="height:100%;">
+  <div style="height:100%;">
     <view-box>
       <!-- TODO 列表样式调整 -->
       <device-repair-item v-for="repair in repairs" :repair="repair" :key="repair.id + 'repair'">
       </device-repair-item>
     </view-box>
+    <router-link tag="li" to="/foo">
+      <button id="add-repair">添加</button>
+    </router-link>
   </div>
 </template>
 
 <script>
   import { ViewBox } from 'vux'
   import DeviceRepairItem from './DeviceRepairItem'
+  import DeviceAddRepair from './DeviceAddRepair'
 
   export default {
     name: 'DeviceRepairList',
     components: {
       ViewBox,
-      DeviceRepairItem
+      DeviceRepairItem,
+      DeviceAddRepair
+    },
+    methods: {
     },
     mounted () {
       this.axios
         .get('http://api.lams.com/maintains')
         .then(response => {
-          this.maintains = response.data
+          this.repairs = response.data
         })
         .catch(error => {
           console.log(error)
           var arr = []
-          for (var i = 0; i < 1; i++) {
+          for (var i = 0; i < 20; i++) {
             arr.push({
-              'id': '1',
+              'id': Math.random(),
               'name': 'ivc',
               'description': 'ivcivcivcivcivcivc'
             })
             arr.push({
-              'id': '2',
+              'id': Math.random(),
               'name': 'bbb',
               'description': 'ivcivcivcivcivcivc'
             })
           }
-          this.maintains = arr
-          console.log(this.maintains)
+          this.repairs = arr
+          console.log(this.repairs)
         })
         .finally()
     },
@@ -66,5 +73,15 @@
     height: 100%;
     width: 100%;
     overflow-x: hidden;
+  }
+  #add-repair {
+    right: 20px;
+    bottom: 40px;
+    width: 100px;
+    height: 100px;
+    background-color: aqua;
+    z-index: 1000;
+    display: block;
+    position: fixed;
   }
 </style>

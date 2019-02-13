@@ -1,11 +1,18 @@
 <template>
-  <div>DeviceRepairDetail</div>
+  <!-- TODO 详情页样式 -->
+  <div>
+    <x-header>维修记录详情</x-header>
+  </div>
 </template>
 
 <script>
-    export default {
-      name: 'DeviceRepairDetail'
+  import { XHeader } from 'vux'
+  export default {
+    name: 'DeviceRepairDetail',
+    components: {
+      XHeader
     }
+  }
 </script>
 
 <style scoped>

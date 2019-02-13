@@ -1,11 +1,17 @@
 <template>
-  <div>DeviceAddRepair</div>
+  <div>
+    <x-header>报修</x-header>
+  </div>
 </template>
 
 <script>
-    export default {
-      name: 'DeviceAddRepair'
+  import { XHeader } from 'vux'
+  export default {
+    name: 'DeviceAddRepair',
+    components: {
+      XHeader
     }
+  }
 </script>
 
 <style scoped>

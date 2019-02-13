@@ -13,16 +13,31 @@
        <tab :line-width=2 active-color='#fc378c' v-model="index">
         <tab-item class="vux-center" :selected="selected === item" v-for="(item, index) in list" @click="selected = item" :key="index">{{item}}</tab-item>
       </tab>
+      <!--<div style="height: 100%; width: 300%;">-->
+        <!--<device-info class="device-detail-tab-item"></device-info>-->
+        <!--<repair-list class="device-detail-tab-item"></repair-list>-->
+        <!--<maintain-list class="device-detail-tab-item"></maintain-list>-->
+      <!--</div>-->
+
       <!-- TODO 高度调整 -->
-      <swiper v-model="index" height="100px" :show-dots="false">
+      <!--<swiper v-model="index" height="100px" :show-dots="false">-->
+        <!--<swiper-item>-->
+        <!--</swiper-item>-->
+        <!--<swiper-item>-->
+        <!--</swiper-item>-->
+        <!--<swiper-item>-->
+        <!--</swiper-item>-->
+      <!--</swiper>-->
+      <!-- 中间 -->
+      <swiper v-model="index" ref="swiper-wrapper" id="swiper-container" @slideChangeTransitionEnd="end">
         <swiper-item>
-          <device-info></device-info>
+          <device-info class="device-detail-tab-item"></device-info>
         </swiper-item>
         <swiper-item>
-          <repair-list></repair-list>
+          <repair-list class="device-detail-tab-item"></repair-list>
         </swiper-item>
         <swiper-item>
-          <maintain-list></maintain-list>
+          <maintain-list class="device-detail-tab-item"></maintain-list>
         </swiper-item>
       </swiper>
     </div>
@@ -129,3 +144,21 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+  .device-detail-tab-item {
+    height: 100%;
+    width: 100%;
+    display: inline;
+    float: left;
+  }
+  #swiper-container {
+    width: 100%;
+    height: e("calc(100% - 0.4rem)");
+    .device-detail-tab-item {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+    }
+  }
+</style>

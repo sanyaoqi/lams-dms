@@ -2,7 +2,7 @@
   <div style="height:100%;">
     <view-box>
       <!-- TODO 列表样式调整 -->
-      <device-maintain-item v-for="maintain in maintains" :maintain="maintain" :key="maintain.id + 'maintainStr'">
+      <device-maintain-item v-for="maintain in maintains" :maintain="maintain" :key="maintain.id + 'maintain'">
       </device-maintain-item>
     </view-box>
   </div>
