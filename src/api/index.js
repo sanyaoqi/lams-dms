@@ -1,5 +1,5 @@
 
-const host = 'http://api.lams.com/'
+const host = 'http://dms.api.olfu.xyz/'
 const project = ''
 const prefix = host + project + ''
 
