@@ -1,22 +1,28 @@
 <template style="height:100%">
   <div style="height:100%;">
-    <view-box>
-      <!-- TODO 列表样式调整 -->
-      <device-maintain-item v-for="maintain in maintains" :maintain="maintain" :key="maintain.id + 'maintain'">
-      </device-maintain-item>
-    </view-box>
+    <group style="height:100%; overflow-y: scroll;" :gutter="0">
+      <cell-box
+        v-for="maintain in maintains"
+        :key="maintain.id + 'maintain'"
+        :link="'/maintain-detail/' + maintain.id"
+        is-link>
+        <device-maintain-item :maintain="maintain"></device-maintain-item>
+      </cell-box>
+    </group>
   </div>
 </template>
 
 <script>
-  import { ViewBox } from 'vux'
+  import { Group, Cell, CellBox } from 'vux'
   import DeviceMaintainItem from './DeviceMaintainItem'
 
   export default {
     name: 'DeviceMaintainList',
     components: {
       DeviceMaintainItem,
-      ViewBox
+      Group,
+      Cell,
+      CellBox
     },
     methods: {
       formatMaintain (maintain) {
@@ -39,12 +45,14 @@
             arr.push({
               'id': '1',
               'name': 'ivc',
-              'description': 'ivcivcivcivcivcivc'
+              'description': 'ivcivcivcivcivcivc',
+              'starts': 4
             })
             arr.push({
               'id': '2',
               'name': 'bbb',
-              'description': 'ivcivcivcivcivcivc'
+              'description': 'ivcivcivcivcivcivc',
+              'starts': 5
             })
           }
           this.maintains = arr
@@ -55,7 +63,8 @@
       return {
         maintains: [{'id': '1',
           'name': 'ivc',
-          'description': 'ivcivcivcivcivcivc'}]
+          'description': 'ivcivcivcivcivcivc',
+          'starts': 4}]
       }
     }
   }
