@@ -42,21 +42,18 @@
       <rater v-model="stars" :font-size="15" style="float: right;"></rater>
     </div>
     <!-- ****** 评论 ****** -->
-      <view-box ref="viewBox">
-        <!-- TODO 列表样式调整 -->
-        <div v-for="comment in comments" :key="comment.id + 'comment'" class="weui-media-box weui-media-box_appmsg">
-          <div class="weui-media-box__hd" v-if="comment.avatar">
-            <img class="weui-media-box__thumb" style="vertical-align: middle;" :src="comment.avatar" alt="">
-          </div>
-          <div class="weui-media-box__bd">
-            <h4 class="weui-media-box__title" v-html="comment.name"></h4>
-            <p class="weui-media-box__desc" v-html="comment.comment"></p>
-          </div>
+    <view-box ref="viewBox">
+      <!-- TODO 列表样式调整 -->
+      <div v-for="comment in comments" :key="comment.id + 'comment'" class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd" v-if="comment.avatar">
+          <img class="weui-media-box__thumb" style="vertical-align: middle;" :src="comment.avatar" alt="">
         </div>
-      </view-box>
-    <div>
-
-    </div>
+        <div class="weui-media-box__bd">
+          <h4 class="weui-media-box__title" v-html="comment.name"></h4>
+          <p class="weui-media-box__desc" v-html="comment.comment"></p>
+        </div>
+      </div>
+    </view-box>
   </div>
 </template>
 
