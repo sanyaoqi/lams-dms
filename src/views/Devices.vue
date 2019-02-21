@@ -91,44 +91,38 @@ export default {
       }
     }
   },
+  created () {
+    // api文档 https://work.weixin.qq.com/api/doc#10028
+    // https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&agentid=AGENTID&state=STATE#wechat_redirect    这个是授权要访问的地址
+    this.axios
+      .get('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + CORPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=snsapi_base&agentid=' + AGENTID + '&state=STATE#wechat_redirect')
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally()
+    // 获取用户信息 https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=ACCESS_TOKEN&code=CODE
+    this.$wechat.config({
+      beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+      debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      appId: CORPID, // 必填，企业微信的corpID
+      timestamp: 2323, // 必填，生成签名的时间戳
+      nonceStr: 'ad', // 必填，生成签名的随机串
+      signature: 'sd', // 必填，签名，见 附录-JS-SDK使用权限签名算法
+      jsApiList: [] // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
+    })
+  },
   mounted () {
     this.axios
       .get(api.devices)
       .then(response => {
         this.devices = response.data
+        this.allDevices = response.data
       })
       .catch(error => {
         console.log(error)
-        var arr = []
-        for (var i = 0; i < 1; i++) {
-          arr.push({
-            'id': '1',
-            'name': 'ivc',
-            'description': 'ivcivcivcivcivcivc',
-            'category': 1,
-            'created_at': 0,
-            'product_at': 0,
-            'owner': 1,
-            'images': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549871587939&di=ab88e51659a070b40bc5a91d2d06cc41&imgtype=0&src=http%3A%2F%2Fi4.hexunimg.cn%2F2012-07-31%2F144172066.jpg',
-            'status': 0,
-            'position': '1'
-          })
-          arr.push({
-            'id': '2',
-            'name': '笔记本电脑',
-            'description': '',
-            'category': 0,
-            'created_at': 1,
-            'product_at': null,
-            'owner': 1,
-            'images': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549871587938&di=aaf073f44d826f633e0800e53a1d5b09&imgtype=0&src=http%3A%2F%2Fimg5.pcpop.com%2FProductImages%2F0x0%2F3%2F3718%2F003718364.jpg',
-            'status': 0,
-            'position': '1'
-          })
-        }
-        this.devices = arr
-        this.allDevices = arr
-        this.errored = true
       })
       .finally()
   },
@@ -141,6 +135,10 @@ export default {
     }
   }
 }
+
+const CORPID = 'aaaa'
+const REDIRECT_URI = encodeURIComponent('http://lamdsdijowfe')
+const AGENTID = 'bbbb'
 </script>
 
 <style>
