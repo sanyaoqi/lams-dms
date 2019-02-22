@@ -4,12 +4,12 @@ const project = ''
 const prefix = host + project + ''
 
 let apis = {
-  devices: prefix + 'devices',			//设备列表 和 设备搜索（注意：搜索时必须带上keyword参数）
-  info: prefix + 'devices/',			//设备详情
-  filters: prefix + 'devices/filters', 	//筛选
-  jsticket: prefix + 'site/jsticket', 	//js_ticket
-  login: prefix + 'user/weworklogin',	//登录
-  userinfo: prefix + 'user/view'	//用户信息(参数传token)
+  devices: prefix + 'devices',
+  info: prefix + 'devices/',
+  filters: prefix + 'devices/filters',
+  jsticket: prefix + 'site/jsticket',
+  login: prefix + 'user/weworklogin',
+  userinfo: prefix + 'user/view'
 }
 
 export default apis
