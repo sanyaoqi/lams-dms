@@ -9,7 +9,8 @@ let apis = {
   filters: prefix + 'devices/filters',
   jsticket: prefix + 'site/jsticket',
   login: prefix + 'user/weworklogin',
-  userinfo: prefix + 'user/view'
+  userinfo: prefix + 'user/view',
+  redirect: prefix + 'redirect'
 }
 
 export default apis

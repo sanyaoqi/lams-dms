@@ -92,6 +92,41 @@ export default {
     }
   },
   created () {
+    this.axios
+      .get(api.jsticket)
+      .then(response => {
+        console.log(response.data)
+        this.json.time_stamp = (new Date()).getTime()
+        this.json.noncestr = 'Wm3WZYTPz0wzccnW'
+        this.json.jsapi_ticket = response.data.data
+        this.json.url = window.location.href
+        this.json.str = 'jsapi_ticket=' + this.json.jsapi_ticket + '&noncestr=' + this.json.jsapi_ticket + '&timestamp=' + this.json.time_stamp + '&url=' + this.json.url
+        console.log(this.json.time_stamp)
+        console.log(this.json.noncestr)
+        console.log(this.json.jsapi_ticket)
+        console.log(this.json.url)
+        console.log(this.json.str)
+        this.$wechat.agentConfig({
+          corpid: CORPID, // 必填，企业微信的corpid，必须与当前登录的企业一致
+          agentid: AGENTID, // 必填，企业微信的应用id
+          timestamp: this.json.time_stamp, // 必填，生成签名的时间戳
+          nonceStr: this.json.noncestr, // 必填，生成签名的随机串
+          signature: '', // 必填，签名，见附录1
+          jsApiList: [  ], //必填
+          success: function( res ) {
+            // 回调
+          },
+          fail: function( res ) {
+            if (res.errMsg.indexOf('function not exist') > -1) {
+              alert('版本过低请升级')
+            }
+          }
+        })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally()
     // api文档 https://work.weixin.qq.com/api/doc#10028
     // https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&agentid=AGENTID&state=STATE#wechat_redirect    这个是授权要访问的地址
     this.axios
@@ -104,41 +139,34 @@ export default {
       })
       .finally()
     // 获取用户信息 https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=ACCESS_TOKEN&code=CODE
-    this.$wechat.config({
-      beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
-      debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-      appId: CORPID, // 必填，企业微信的corpID
-      timestamp: 2323, // 必填，生成签名的时间戳
-      nonceStr: 'ad', // 必填，生成签名的随机串
-      signature: 'sd', // 必填，签名，见 附录-JS-SDK使用权限签名算法
-      jsApiList: [] // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
-    })
   },
   mounted () {
-    this.axios
-      .get(api.devices)
-      .then(response => {
-        this.devices = response.data
-        this.allDevices = response.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      .finally()
+    // this.axios
+    //   .get(api.devices)
+    //   .then(response => {
+    //     console.log(response.data.data)
+    //     this.devices = response.data.data
+    //     this.allDevices = response.data.data
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    //   .finally()
   },
   data () {
     return {
       allDevices: [],
       devices: [],
       searchText: '',
-      isScreenShow: false
+      isScreenShow: false,
+      json: {}
     }
   }
 }
 
 const CORPID = 'wwa417d520fd30a759'
-const REDIRECT_URI = encodeURIComponent('http://lamdsdijowfe')
-const AGENTID = 'bbbb'
+const REDIRECT_URI = encodeURIComponent(api.redirect)
+const AGENTID = '1000016'
 </script>
 
 <style>

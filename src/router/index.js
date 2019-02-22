@@ -5,6 +5,7 @@ import DeviceView from '../views/DeviceView'
 import MaintainDetail from '../views/DeviceMaintainDetail'
 import RepairDetail from '../views/DeviceRepairDetail'
 import AddRepair from '../views/DeviceAddRepair'
+import Redirect from '../views/Redirect'
 
 Vue.use(Router)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/add-repair',
     name: 'add-repair',
     component: AddRepair
+  },
+  {
+    path: '/redirect',
+    name: 'redirect',
+    component: Redirect
   }
 ]
 
