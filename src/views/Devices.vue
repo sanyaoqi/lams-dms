@@ -136,7 +136,7 @@ export default {
   }
 }
 
-const CORPID = 'aaaa'
+const CORPID = 'wwa417d520fd30a759'
 const REDIRECT_URI = encodeURIComponent('http://lamdsdijowfe')
 const AGENTID = 'bbbb'
 </script>
