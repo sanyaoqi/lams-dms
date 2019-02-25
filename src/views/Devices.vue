@@ -93,34 +93,49 @@ export default {
   },
   created () {
     this.axios
-      .get(api.jsticket)
+      .get(api.jssign + '?url=' + window.location.href)
       .then(response => {
-        console.log(response.data)
-        this.json.time_stamp = (new Date()).getTime()
-        this.json.noncestr = 'Wm3WZYTPz0wzccnW'
-        this.json.jsapi_ticket = response.data.data
-        this.json.url = window.location.href
-        this.json.str = 'jsapi_ticket=' + this.json.jsapi_ticket + '&noncestr=' + this.json.jsapi_ticket + '&timestamp=' + this.json.time_stamp + '&url=' + this.json.url
-        console.log(this.json.time_stamp)
-        console.log(this.json.noncestr)
-        console.log(this.json.jsapi_ticket)
-        console.log(this.json.url)
-        console.log(this.json.str)
-        this.$wechat.agentConfig({
-          corpid: CORPID, // 必填，企业微信的corpid，必须与当前登录的企业一致
-          agentid: AGENTID, // 必填，企业微信的应用id
+        console.log('response--->>>', response.data)
+        this.json.time_stamp = response.data.data.timestamp
+        this.json.noncestr = response.data.data.nonce_str
+        this.json.signature = response.data.data.signature
+        this.$wechat.config({
+          beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+          debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+          appId: CORPID, // 必填，企业微信的corpID
           timestamp: this.json.time_stamp, // 必填，生成签名的时间戳
           nonceStr: this.json.noncestr, // 必填，生成签名的随机串
-          signature: '', // 必填，签名，见附录1
-          jsApiList: [  ], //必填
-          success: function( res ) {
+          signature: this.json.signature, // 必填，签名，见附录1
+          jsApiList: [ 'onVoicePlayEnd' ], // 必填
+          success: function (res) {
             // 回调
+            this.axios
+              .get('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + CORPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=snsapi_base&agentid=' + AGENTID + '&state=STATE#wechat_redirect', {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  'Access-Control-Allow-Methods': 'OPTIONS',
+                  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                  'Access-Control-Allow-Credentials': 'true'
+                }
+              })
+              .then(response => {
+                console.log(response)
+              })
+              .catch(error => {
+                console.log(error)
+                alert(error)
+              })
+              .finally()
           },
-          fail: function( res ) {
+          fail: function (res) {
             if (res.errMsg.indexOf('function not exist') > -1) {
               alert('版本过低请升级')
             }
           }
+        })
+        this.$wechat.ready(function () {
+          // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
         })
       })
       .catch(error => {
@@ -129,15 +144,6 @@ export default {
       .finally()
     // api文档 https://work.weixin.qq.com/api/doc#10028
     // https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&agentid=AGENTID&state=STATE#wechat_redirect    这个是授权要访问的地址
-    this.axios
-      .get('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + CORPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=snsapi_base&agentid=' + AGENTID + '&state=STATE#wechat_redirect')
-      .then(response => {
-        console.log(response)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      .finally()
     // 获取用户信息 https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=ACCESS_TOKEN&code=CODE
   },
   mounted () {

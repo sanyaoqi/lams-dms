@@ -8,6 +8,7 @@ let apis = {
   info: prefix + 'devices/',
   filters: prefix + 'devices/filters',
   jsticket: prefix + 'site/jsticket',
+  jssign: prefix + 'site/jssign',
   login: prefix + 'user/weworklogin',
   userinfo: prefix + 'user/view',
   redirect: prefix + 'redirect'
