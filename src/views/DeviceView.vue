@@ -40,6 +40,7 @@
 
 <script>
 import { Card, Tab, TabItem, Swiper, SwiperItem, XHeader } from 'vux'
+import api from '@/api'
 
 const list = () => ['详情信息', '维修记录', '维护记录']
 
@@ -73,7 +74,7 @@ export default {
   },
   mounted () {
     this.axios
-      .get('http://api.lams.com/devices/' + this.$route.params.id)
+      .get(api.userinfo + '/' + this.$route.params.id)
       .then(response => {
         this.device = response.data
       })

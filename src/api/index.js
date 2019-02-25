@@ -5,7 +5,6 @@ const prefix = host + project + ''
 
 let apis = {
   devices: prefix + 'devices',
-  info: prefix + 'devices/',
   filters: prefix + 'devices/filters',
   jsticket: prefix + 'site/jsticket',
   jssign: prefix + 'site/jssign',

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../views/Devices'
+import Home from '../views/Home'
+import Devices from '../views/Devices'
 import DeviceView from '../views/DeviceView'
 import MaintainDetail from '../views/DeviceMaintainDetail'
 import RepairDetail from '../views/DeviceRepairDetail'
@@ -10,6 +11,11 @@ import Redirect from '../views/Redirect'
 Vue.use(Router)
 
 const routes = [
+  {
+    path: '/devices',
+    name: 'devices',
+    component: Devices
+  },
   {
     path: '/',
     name: 'Home',
