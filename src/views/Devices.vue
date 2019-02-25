@@ -99,6 +99,27 @@ export default {
         this.json.time_stamp = response.data.data.timestamp
         this.json.noncestr = response.data.data.nonce_str
         this.json.signature = response.data.data.signature
+        alert(REDIRECT_URI)
+        // this.axios
+        //   .get('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + CORPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=snsapi_base&agentid=' + AGENTID + '&state=STATE#wechat_redirect', {
+        //     headers: {
+        //       'Access-Control-Allow-Origin': '*',
+        //       'Content-Type': 'application/x-www-form-urlencoded',
+        //       'Access-Control-Allow-Methods': 'OPTIONS',
+        //       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        //       'Access-Control-Allow-Credentials': 'true'
+        //     }
+        //   })
+        //   .then(response => {
+        //     console.log(response)
+        //     alert('success')
+        //     alert(response)
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //     alert(error)
+        //   })
+        //   .finally()
         this.$wechat.config({
           beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
           debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -106,29 +127,13 @@ export default {
           timestamp: this.json.time_stamp, // 必填，生成签名的时间戳
           nonceStr: this.json.noncestr, // 必填，生成签名的随机串
           signature: this.json.signature, // 必填，签名，见附录1
-          jsApiList: [ 'onVoicePlayEnd' ], // 必填
+          jsApiList: [ 'getCurExternalContact' ], // 必填
           success: function (res) {
             // 回调
-            this.axios
-              .get('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + CORPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=snsapi_base&agentid=' + AGENTID + '&state=STATE#wechat_redirect', {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Access-Control-Allow-Origin': '*',
-                  'Access-Control-Allow-Methods': 'OPTIONS',
-                  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-                  'Access-Control-Allow-Credentials': 'true'
-                }
-              })
-              .then(response => {
-                console.log(response)
-              })
-              .catch(error => {
-                console.log(error)
-                alert(error)
-              })
-              .finally()
+            alert('success')
           },
           fail: function (res) {
+            alert('fail')
             if (res.errMsg.indexOf('function not exist') > -1) {
               alert('版本过低请升级')
             }
@@ -136,6 +141,7 @@ export default {
         })
         this.$wechat.ready(function () {
           // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+          window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + CORPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=snsapi_base&agentid=' + AGENTID + '&state=STATE#wechat_redirect'
         })
       })
       .catch(error => {
@@ -171,7 +177,7 @@ export default {
 }
 
 const CORPID = 'wwa417d520fd30a759'
-const REDIRECT_URI = encodeURIComponent(api.redirect)
+const REDIRECT_URI = encodeURIComponent('http://device.olfu.xyz/#/redirect')
 const AGENTID = '1000016'
 </script>
 
