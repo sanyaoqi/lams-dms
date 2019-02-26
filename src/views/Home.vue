@@ -12,7 +12,7 @@
         this.$router.push({path: '/devices'})
       } else {
         this.axios
-          .get(api.jssign + '?url=' + window.location.href)
+          .get(api.jssign + '?url=' + REDIRECT_URI)
           .then(response => {
             this.json.time_stamp = response.data.data.timestamp
             this.json.noncestr = response.data.data.nonce_str
