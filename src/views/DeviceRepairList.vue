@@ -19,6 +19,7 @@
   import { Group, Cell, CellBox } from 'vux'
   import DeviceRepairItem from './DeviceRepairItem'
   import DeviceAddRepair from './DeviceAddRepair'
+  import api from '@/api'
 
   export default {
     name: 'DeviceRepairList',
@@ -29,45 +30,25 @@
       DeviceRepairItem,
       DeviceAddRepair
     },
+    props: {
+      device_id: ''
+    },
     methods: {
     },
     mounted () {
       this.axios
-        .get('http://api.lams.com/maintains')
+        .get(api.repair + this.device_id)
         .then(response => {
-          this.repairs = response.data
+          this.repairs = response.data.data
         })
         .catch(error => {
           console.log(error)
-          var arr = []
-          for (var i = 0; i < 20; i++) {
-            arr.push({
-              'id': Math.random(),
-              'name': 'ivc',
-              'description': 'ivcivcivcivcivcivc'
-            })
-            arr.push({
-              'id': Math.random(),
-              'name': 'bbb',
-              'description': 'ivcivcivcivcivcivc'
-            })
-          }
-          this.repairs = arr
         })
         .finally()
     },
     data () {
       return {
-        repairs: [
-          {
-            'id': '1',
-            'name': 'aaa'
-          },
-          {
-            'id': '2',
-            'name': 'bbb'
-          }
-        ]
+        repairs: []
       }
     }
   }

@@ -7,9 +7,8 @@
           <div class="weui-media-box weui-media-box_text" v-if="device !== null">
             <h2 class="weui-media-box__title">{{device.name}}</h2>
             <p class="weui-media-box__desc">{{device.description}}</p>
-            <p class="weui-media-box__desc">{{device.created_at}}</p>
-            <p class="weui-media-box__desc">{{device.description}}</p>
-            <p class="weui-media-box__desc">{{device.description}}</p>
+            <p class="weui-media-box__desc">{{device.category_name}}</p>
+            <p class="weui-media-box__desc">{{device.product_at_format}}</p>
           </div>
         </div>
       </div></div>
@@ -28,10 +27,10 @@
           <device-info class="device-detail-tab-item" v-if="device !== null" :device="device"></device-info>
         </swiper-item>
         <swiper-item>
-          <repair-list class="device-detail-tab-item"></repair-list>
+          <repair-list class="device-detail-tab-item" v-if="device !== null" :device_id="device.id"></repair-list>
         </swiper-item>
         <swiper-item>
-          <maintain-list class="device-detail-tab-item"></maintain-list>
+          <maintain-list class="device-detail-tab-item" v-if="device !== null" :device_id="device.id"></maintain-list>
         </swiper-item>
       </swiper>
     </div>
@@ -74,24 +73,13 @@ export default {
   },
   mounted () {
     this.axios
-      .get(api.userinfo + '/' + this.$route.params.id)
+      .get(api.detail + this.$route.params.id)
       .then(response => {
-        this.device = response.data
+        this.device = response.data.data
+        // this.$store.commit('device', this.device)
       })
       .catch(error => {
         console.log(error)
-        this.device = {
-          'id': '1',
-          'name': 'ivc',
-          'description': 'ivcivcivcivcivcivc',
-          'category': 1,
-          'created_at': '21:00',
-          'product_at': 0,
-          'owner': 'tmachc',
-          'images': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549871587939&di=ab88e51659a070b40bc5a91d2d06cc41&imgtype=0&src=http%3A%2F%2Fi4.hexunimg.cn%2F2012-07-31%2F144172066.jpg',
-          'status': 0,
-          'position': '公司'
-        }
         this.errored = true
       })
       .finally()

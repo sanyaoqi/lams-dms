@@ -8,7 +8,7 @@
   export default {
     name: 'Home',
     created () {
-      if (this.flag) {
+      if (window.localStorage.getItem('token')) {
         this.$router.push({path: '/devices'})
       } else {
         this.axios

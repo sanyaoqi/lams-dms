@@ -24,6 +24,9 @@
       Cell,
       CellBox
     },
+    props: {
+      device_id: ''
+    },
     methods: {
       formatMaintain (maintain) {
         return {
@@ -61,7 +64,7 @@
     },
     data () {
       return {
-        maintains: [{'id': '1',
+        maintains: [{'id': '4',
           'name': 'ivc',
           'description': 'ivcivcivcivcivcivc',
           'starts': 4}]
