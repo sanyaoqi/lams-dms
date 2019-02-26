@@ -4,7 +4,7 @@ const project = ''
 const prefix = host + project + ''
 
 let apis = {
-  userauth: prefix + 'user/auth/',
+  userauth: prefix + 'user/auth',
   devices: prefix + 'devices',
   detail: prefix + 'devices/',
   filters: prefix + 'devices/filters',

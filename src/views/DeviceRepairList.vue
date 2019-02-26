@@ -9,7 +9,8 @@
         <device-repair-item :repair="repair"></device-repair-item>
       </cell-box>
     </group>
-    <router-link to="/add-repair">
+
+    <router-link :to="{path:'/add-repair', query: {device_id: device.id, device: device}}">
       <button id="add-repair">添加</button>
     </router-link>
   </div>
@@ -31,13 +32,13 @@
       DeviceAddRepair
     },
     props: {
-      device_id: ''
+      device: Object
     },
     methods: {
     },
     mounted () {
       this.axios
-        .get(api.repair + this.device_id)
+        .get(api.repair + this.device.id)
         .then(response => {
           this.repairs = response.data.data
         })

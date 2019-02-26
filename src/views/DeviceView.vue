@@ -27,7 +27,7 @@
           <device-info class="device-detail-tab-item" v-if="device !== null" :device="device"></device-info>
         </swiper-item>
         <swiper-item>
-          <repair-list class="device-detail-tab-item" v-if="device !== null" :device_id="device.id"></repair-list>
+          <repair-list class="device-detail-tab-item" v-if="device !== null" :device="device"></repair-list>
         </swiper-item>
         <swiper-item>
           <maintain-list class="device-detail-tab-item" v-if="device !== null" :device_id="device.id"></maintain-list>

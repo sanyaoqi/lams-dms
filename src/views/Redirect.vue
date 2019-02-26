@@ -7,14 +7,12 @@
   export default {
     name: 'Redirect',
     mounted () {
-      alert('Redirect')
-      alert(window.location.href)
       this.code = window.location.href.split('code=')[1].split('&')[0]
-      this.axios.post(api.userauth, {
-        code: this.code
-      }, {
-        'Access-Control-Allow-Origin': '*'
-      })
+      // let data = { code: this.code }
+      let data = new FormData()
+      data.append('code', this.code)
+      this.axios
+        .post(api.userauth, data)
         .then(function (response) {
           console.log(response)
           alert(response)
@@ -23,15 +21,7 @@
           console.log(error)
           alert(error)
         })
-      // this.axios
-      //   .post(api.userauth, {
-      //     code: this.code
-      //   })
-      //   .then(response => {
-      //     alert('success')
-      //     alert(response)
-      //   })
-      //   .finally()
+        .finally()
     },
     data () {
       return {
