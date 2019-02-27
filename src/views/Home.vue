@@ -34,7 +34,7 @@
   }
 
   const CORPID = 'wwa417d520fd30a759'
-  const REDIRECT_URI = encodeURIComponent('http://device.olfu.xyz/#/redirect')
+  const REDIRECT_URI = encodeURIComponent('http://device.olfu.xyz/redirect')
   const AGENTID = '1000016'
 </script>
 
