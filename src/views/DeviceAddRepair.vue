@@ -11,7 +11,7 @@
       @on-hide="log('hide', $event)"></datetime>
     <!-- 维修内容自述 -->
     <div style="margin: 0px;">
-      <textarea style="width: 100%; height: 150px; padding: 15px;"></textarea>
+      <textarea placeholder="请输入文字内容" style="width: 100%; height: 150px; padding: 15px;"></textarea>
     </div>
     <!-- 上传图片 -->
     <div style="margin: 15px">

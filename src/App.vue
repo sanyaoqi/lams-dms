@@ -20,7 +20,7 @@ export default {
         this.json.signature = response.data.data.signature
         this.$wechat.config({
           beta: true,
-          debug: true,
+          debug: false,
           appId: 'wwa417d520fd30a759',
           timestamp: this.json.time_stamp,
           nonceStr: this.json.noncestr,
