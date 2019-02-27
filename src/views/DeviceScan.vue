@@ -14,7 +14,7 @@
         this.axios
         .get(api.jssign + '?url=' + SIGNURL)
         .then(response => {
-          console.log(response)
+          // console.log(response)
           this.json.time_stamp = response.data.data.timestamp
           this.json.noncestr = response.data.data.nonce_str
           this.json.signature = response.data.data.signature
@@ -32,7 +32,7 @@
             needResult: 1,
             scanType: ['qrCode', 'barCode'],
             success: function (res) {
-              console.log(res)
+              // console.log(res)
               window.location.href = res.resultStr
             },
             error: function (res) {
