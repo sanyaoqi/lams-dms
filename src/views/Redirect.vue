@@ -7,7 +7,13 @@
   export default {
     name: 'Redirect',
     mounted () {
-      this.code = window.location.href.split('code=')[1].split('&')[0]
+      let regex = /code=(.+[^&])&?/i
+      // let code = regex.exec('http://localhost:8080/device-scan?code=aBsdssc2q12dsfsdf')
+      let code = regex.exec(window.location.href)
+      console.log(code)
+      if (code) {
+        this.code = code[1]
+      }
       // let data = { code: this.code }
       let data = new FormData()
       data.append('code', this.code)
