@@ -16,8 +16,6 @@ Vue.use(WechatPlugin)
 Vue.use(VueAxios, axios)
 Vue.use(VueRouter)
 
-console.log('iiiiiiii--->>> ', store) // 可以直接访问 wx 对象
-
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
