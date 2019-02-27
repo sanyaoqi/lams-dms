@@ -55,5 +55,6 @@ const routes = [
 ]
 
 export default new Router({
-  routes
+  mode: 'history',
+  routes: routes
 })
