@@ -24,7 +24,7 @@ export default {
           this.json.signature = response.data.data.signature
           this.$wechat.config({
             beta: true,
-            debug: false,
+            debug: true,
             appId: 'wwa417d520fd30a759',
             timestamp: this.json.time_stamp,
             nonceStr: this.json.noncestr,
@@ -33,6 +33,11 @@ export default {
           })
           this.$wechat.ready(() => {
             this.$store.commit('setConfigFlag')
+            alert('$wechat config ok')
+          })
+          this.$wechat.error(function (res) {
+            // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+            alert('$wechat config error')
           })
         })
     }
