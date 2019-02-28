@@ -1,5 +1,4 @@
 <template>
-  <button @click="clickTest">测试扫一扫</button>
 </template>
 
 <script>
