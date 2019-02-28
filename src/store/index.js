@@ -12,11 +12,6 @@ const store = new Vuex.Store({
     setConfigFlag (state) {
       state.configFlag = true
     }
-  },
-  actions: {
-    setConfigFlag (context) {
-      context.commit('setConfigFlag')
-    }
   }
 })
 

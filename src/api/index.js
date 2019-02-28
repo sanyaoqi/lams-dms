@@ -13,7 +13,10 @@ let apis = {
   login: prefix + 'user/weworklogin',
   userinfo: prefix + 'user/view',
   redirect: prefix + 'redirect',
-  repair: prefix + 'reports?device_id='
+  repair: prefix + 'reports?device_id=',
+  uploadimage: prefix + 'site/upload',
+  uploadimagebase64: prefix + 'site/upload-image-base64',
+  addrepair: prefix + 'report/create'
 }
 
 export default apis

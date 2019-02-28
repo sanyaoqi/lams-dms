@@ -22,6 +22,10 @@
         <span class="weui-form-preview__value">{{ device.contact_number }}</span>
       </p>
     </div>
+
+    <router-link :to="{path:'/add-repair', query: {device_id: device.id, device: device}}">
+      <button id="add-repair">报修</button>
+    </router-link>
   </div>
 </template>
 
@@ -39,5 +43,14 @@
 </script>
 
 <style scoped>
-
+  #add-repair {
+    right: 30px;
+    bottom: 40px;
+    width: 50px;
+    height: 50px;
+    background-color: aqua;
+    z-index: 1000;
+    display: block;
+    position: fixed;
+  }
 </style>

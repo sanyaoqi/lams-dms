@@ -11,7 +11,7 @@
     </group>
 
     <router-link :to="{path:'/add-repair', query: {device_id: device.id, device: device}}">
-      <button id="add-repair">添加</button>
+      <button id="add-repair">报修</button>
     </router-link>
   </div>
 </template>

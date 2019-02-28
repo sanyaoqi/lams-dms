@@ -9,8 +9,6 @@
   export default {
     name: 'device-scan',
     methods: {
-      clickTest () {
-      }
     },
     watch: {
       flag: function (newVal, oldVal) {
