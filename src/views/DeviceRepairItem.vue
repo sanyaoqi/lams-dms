@@ -2,7 +2,7 @@
   <div style="margin: 5px; width: 100%; height: 100%;">
     <div class="weui-media-box__bd">
       <div class="weui-media-box__title" style="color: #333">
-        {{ repair.discription }} &nbsp;
+        {{ repair.description }} &nbsp;
         <a class="device-repair-status"
            v-bind:class="{
            'textRed': this.repair.status == 0,
@@ -38,15 +38,15 @@
     font-size: 0.9rem;
   }
   .textRed {
-    color: tomato;
+    background-color: tomato;
   }
   .textOrange {
-    color: gold;
+    background-color: gold;
   }
   .textBlue {
-    color: deepskyblue;
+    background-color: deepskyblue;
   }
   .textGreen {
-    color: mediumspringgreen;
+    background-color: mediumspringgreen;
   }
 </style>

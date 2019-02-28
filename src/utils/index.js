@@ -14,6 +14,11 @@ var utils = {
       u8arr[n] = bstr.charCodeAt(n)
     }
     return new Blob([u8arr], { type: mime })
+  },
+  deletaUserData: function () {
+    window.localStorage.removeItem('token')
+    window.localStorage.removeItem('user')
+    window.location.href = 'http://device.olfu.xyz/'
   }
 }
 

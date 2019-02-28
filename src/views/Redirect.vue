@@ -19,6 +19,7 @@
         .post(api.userauth, data)
         .then(function (response) {
           window.localStorage.setItem('token', response.data.token)
+          window.localStorage.setItem('user', response.data.user)
           alert('新的token是--->>>' + response.data.token)
           window.location.href = 'http://device.olfu.xyz/'
         })
