@@ -3,7 +3,15 @@
     <div class="weui-media-box__bd">
       <div class="weui-media-box__title" style="color: #333">
         {{ repair.discription }} &nbsp;
-        <a class="device-repair-status">已完成</a>
+        <a class="device-repair-status"
+           v-bind:class="{
+           'textRed': this.repair.status == 0,
+           'textOrange': this.repair.status == 1,
+           'textBlue': this.repair.status == 2,
+           'textGreen': this.repair.status == 3
+           }">
+          &nbsp;{{ this.repair.status_name }}&nbsp;
+        </a>
       </div>
       <div class="weui-media-box__desc" style="margin-top: 5px;">
         <a>报修人：{{ this.repair.user.user_nick }}</a>
@@ -28,5 +36,17 @@
     height: 100%;
     background-color: aquamarine;
     font-size: 0.9rem;
+  }
+  .textRed {
+    color: tomato;
+  }
+  .textOrange {
+    color: gold;
+  }
+  .textBlue {
+    color: deepskyblue;
+  }
+  .textGreen {
+    color: mediumspringgreen;
   }
 </style>

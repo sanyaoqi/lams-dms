@@ -11,7 +11,7 @@
       @on-hide="log('hide', $event)"></datetime>
     <!-- 维修内容自述 -->
     <div style="margin: 0px;">
-      <textarea placeholder="请输入文字内容" style="width: 100%; height: 150px; padding: 15px;">{{ this.text }}</textarea>
+      <textarea placeholder="请输入文字内容" style="width: 100%; height: 150px; padding: 15px;" v-model="text">{{ this.text }}</textarea>
     </div>
     <!-- 上传图片 -->
     <div style="margin: 15px">
@@ -91,6 +91,14 @@
       },
       clickSubmit () {
         alert('clickSubmit')
+        if (this.text === '') {
+          alert('请填写描述')
+          return
+        }
+        if (this.images.length === 0) {
+          alert('请上传图片')
+          return
+        }
         let self = this
         var fd = new FormData()
         var imagesStr = ''
@@ -106,17 +114,19 @@
         fd.append('time', this.value1)
         fd.append('images', imagesStr)
         // fd.append('token', window.localStorage.getItem('token'))
+        alert(api.addrepair + '?token=' + window.localStorage.getItem('token'))
         self.axios
           .post(api.addrepair + '?token=' + window.localStorage.getItem('token'), fd)
           .then(function (response) {
-            alert(response.data)
             alert(response.data.code)
-            if (response.data.code === 5004) {
-              window.localStorage.removeItem('token')
-              window.location.href = encodeURIComponent('http://device.olfu.xyz/')
-            } else {
+            if (response.data.code === 200) {
               alert('报修成功')
               self.$router.go(-1)
+            } else if (response.data.code === 5004) {
+              window.localStorage.removeItem('token')
+              window.location.href = 'http://device.olfu.xyz/'
+            } else {
+              alert('报修失败' + response.data.code)
             }
           })
           .catch(function (error) {
