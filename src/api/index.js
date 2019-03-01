@@ -17,7 +17,8 @@ let apis = {
   uploadimage: prefix + 'site/upload',
   uploadimagebase64: prefix + 'site/upload-image-base64',
   addrepair: prefix + 'report/create',
-  repairDetail: prefix + 'reports/'
+  repairDetail: prefix + 'reports/',
+  repairComment: prefix + 'comments?'
 }
 
 export default apis

@@ -50,34 +50,66 @@
     <view-box ref="viewBox">
       <!-- TODO 列表样式调整 -->
       <div v-for="comment in comments" :key="comment.id + 'comment'" class="weui-media-box weui-media-box_appmsg">
-        <div class="weui-media-box__hd" v-if="comment.avatar">
-          <img class="weui-media-box__thumb" style="vertical-align: middle;" :src="comment.avatar" alt="">
+        <div class="weui-media-box__hd" v-if="comment.user.image">
+          <img class="weui-media-box__thumb" style="vertical-align: middle;" :src="comment.user.image" alt="">
         </div>
         <div class="weui-media-box__bd">
-          <h4 class="weui-media-box__title" v-html="comment.name"></h4>
-          <p class="weui-media-box__desc" v-html="comment.comment"></p>
+          <h4 class="weui-media-box__title" v-html="comment.user.user_nick"></h4>
+          <p class="weui-media-box__desc" v-html="comment.content"></p>
         </div>
       </div>
     </view-box>
+    <button id="add-comment" @click="clickAddComment">评论</button>
+    <div v-transfer-dom style="width: 100%;">
+      <confirm v-model="showAddComment"
+               show-input
+               ref="confirmComment"
+               title="添加评论"
+               @on-cancel="onCancel"
+               @on-confirm="onConfirm"
+               @on-show="onShow"
+               @on-hide="onHide">
+      </confirm>
+    </div>
   </div>
 </template>
 
 <script>
-  import { XHeader, Swiper, SwiperItem, Rater, ViewBox } from 'vux'
+  import { XHeader, Swiper, SwiperItem, Rater, ViewBox, TransferDom, Confirm } from 'vux'
   import api from '@/api'
 
   export default {
     name: 'DeviceRepairDetail',
+    directives: {
+      TransferDom
+    },
     components: {
       XHeader,
       Swiper,
       SwiperItem,
       Rater,
-      ViewBox
+      ViewBox,
+      Confirm
     },
     methods: {
       demo01_onIndexChange (index) {
         this.demo01_index = index
+      },
+      clickAddComment () {
+        console.log('add comment')
+        this.showAddComment = true
+      },
+      onHide () {
+        console.log('on hide')
+      },
+      onShow () {
+        this.$refs.confirmComment.setInputValue('default')
+      },
+      onCancel () {
+      },
+      onConfirm (value) {
+        this.$refs.confirmComment.setInputValue('')
+        this.$vux.toast.text('input value: ' + value)
       }
     },
     mounted () {
@@ -97,6 +129,16 @@
           console.log(error)
         })
         .finally()
+      this.axios
+        .get(api.repairComment + 'object_id=' + this.repair_id + '&object_type=' + '1')
+        .then(response => {
+          console.log(response.data.data)
+          this.comments = response.data.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally()
     },
     data () {
       return {
@@ -106,20 +148,8 @@
         repair: {},
         rater_disabled: false,
         stars: 4,
-        comments: [
-          {
-            id: 1,
-            name: '韩冲1',
-            avatar: 'https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg',
-            comment: '评论一下'
-          },
-          {
-            id: 2,
-            name: '韩冲2',
-            avatar: 'https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg',
-            comment: '评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..评论两下..'
-          }
-        ]
+        comments: [],
+        showAddComment: false
       }
     }
   }
@@ -149,6 +179,16 @@
   }
   .textGreen {
     background-color: mediumspringgreen;
+  }
+  #add-comment {
+    right: 30px;
+    bottom: 40px;
+    width: 50px;
+    height: 50px;
+    background-color: aqua;
+    z-index: 1000;
+    display: block;
+    position: fixed;
   }
 </style>
 
