@@ -4,14 +4,11 @@
     <swiper :list="demo01_list" v-model="demo01_index" :show-dots="false" @on-index-change="demo01_onIndexChange"></swiper>
     <datetime
       v-model="value1"
-      @on-change="change"
       title="报修日期"
-      @on-cancel="log('cancel')"
-      @on-confirm="onConfirm"
-      @on-hide="log('hide', $event)"></datetime>
+      :readonly='true'></datetime>
     <!-- 维修内容自述 -->
-    <div style="margin: 0px;">
-      <textarea placeholder="请输入文字内容" style="width: 100%; height: 150px; padding: 15px;">{{ this.text }}</textarea>
+    <div style="margin: 0px; width: 100%;text-align: center;">
+      <textarea placeholder="请输入文字内容" style="width: 90%; height: 150px; padding: 10px;text-align: left;" v-model="text">{{ this.text }}</textarea>
     </div>
     <!-- 上传图片 -->
     <div style="margin: 15px">
@@ -26,8 +23,8 @@
 </template>
 
 <script>
-  import { XHeader, Swiper, SwiperItem, Datetime, XButton } from 'vux'
-  // import utils from '@/utils'
+  import { XHeader, Swiper, SwiperItem, Datetime, XButton, dateFormat } from 'vux'
+  import utils from '@/utils'
   import api from '@/api'
 
   export default {
@@ -91,6 +88,14 @@
       },
       clickSubmit () {
         alert('clickSubmit')
+        if (this.text === '') {
+          alert('请填写描述')
+          return
+        }
+        if (this.images.length === 0) {
+          alert('请上传图片')
+          return
+        }
         let self = this
         var fd = new FormData()
         var imagesStr = ''
@@ -102,21 +107,24 @@
           }
         }
         fd.append('device_id', this.device_id)
-        fd.append('discription', this.text)
+        fd.append('description', this.text)
         fd.append('time', this.value1)
         fd.append('images', imagesStr)
         // fd.append('token', window.localStorage.getItem('token'))
+        alert(api.addrepair + '?token=' + window.localStorage.getItem('token'))
         self.axios
           .post(api.addrepair + '?token=' + window.localStorage.getItem('token'), fd)
           .then(function (response) {
-            alert(response.data)
             alert(response.data.code)
-            if (response.data.code === 5004) {
-              window.localStorage.removeItem('token')
-              window.location.href = encodeURIComponent('http://device.olfu.xyz/')
-            } else {
+            if (response.data.code === 200) {
               alert('报修成功')
               self.$router.go(-1)
+            } else if (response.data.code === 5004) {
+              utils.deletaUserData()
+            } else if (response.data.code === 5009) {
+              utils.deletaUserData()
+            } else {
+              alert('报修失败' + response.data.code)
             }
           })
           .catch(function (error) {
@@ -137,10 +145,11 @@
       return {
         demo01_index: 0,
         demo01_list: [],
-        value1: '2019-01-01',
+        value1: dateFormat(new Date(), 'YYYY-MM-DD'),
         device_id: '',
         images: [],
-        text: ''
+        text: '',
+        fullWidth: document.documentElement.clientWidth
       }
     }
   }

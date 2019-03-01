@@ -16,7 +16,8 @@ let apis = {
   repair: prefix + 'reports?device_id=',
   uploadimage: prefix + 'site/upload',
   uploadimagebase64: prefix + 'site/upload-image-base64',
-  addrepair: prefix + 'report/create'
+  addrepair: prefix + 'report/create',
+  repairDetail: prefix + 'reports/'
 }
 
 export default apis
