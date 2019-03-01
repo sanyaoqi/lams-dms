@@ -11,14 +11,14 @@
     },
     watch: {
       flag: function (newVal, oldVal) {
-        console.log(newVal, 'flag', oldVal)
+        // console.log(newVal, 'flag', oldVal)
         if (newVal) {
           Vue.wechat.scanQRCode({
             desc: 'scanQRCode desc',
             needResult: 1,
             scanType: ['qrCode', 'barCode'],
             success: function (res) {
-              console.log(res)
+              // console.log(res)
               window.location.href = res.resultStr
             },
             error: function (res) {
