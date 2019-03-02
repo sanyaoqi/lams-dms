@@ -18,7 +18,8 @@ let apis = {
   uploadimagebase64: prefix + 'site/upload-image-base64',
   addrepair: prefix + 'report/create',
   repairDetail: prefix + 'reports/',
-  repairComment: prefix + 'comments?'
+  repairComment: prefix + 'comments?',
+  weworkToken: prefix + 'user/weworklogin'
 }
 
 export default apis

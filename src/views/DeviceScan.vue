@@ -11,8 +11,14 @@
     },
     watch: {
       flag: function (newVal, oldVal) {
-        console.log(newVal, 'flag', oldVal)
-        alert(newVal + '---flag---' + oldVal)
+        this.$wechat.checkJsApi({
+          jsApiList: ['scanQRCode'],
+          success: function (res) {
+            console.log(res)
+          }
+        })
+        // console.log(newVal, 'flag', oldVal)
+        // alert(newVal + '---flag---' + oldVal)
         if (newVal) {
           Vue.wechat.scanQRCode({
             desc: 'scanQRCode desc',

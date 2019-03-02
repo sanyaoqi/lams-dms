@@ -115,12 +115,6 @@
         this.$refs.confirmComment.setInputValue('')
         this.$vux.toast.text('input value: ' + value)
       },
-      hasaAssignee () {
-        if (this.assignee.img) {
-          return true
-        }
-        return false
-      }
     },
     mounted () {
       this.repair_id = window.location.href.split('/repair-detail/')[1]
