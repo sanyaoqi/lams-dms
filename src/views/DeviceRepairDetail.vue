@@ -7,42 +7,46 @@
       <!-- ****** 报修人 ****** -->
       <div class="weui-flex__item"><div class="placeholder weui-media-box weui-media-box_appmsg">
         <div class="weui-media-box__hd">
-          <img class="weui-media-box__thumb" style="vertical-align: middle;" :src="repair.user.image" alt="">
+          <img v-if="reporter.image" class="weui-media-box__thumb" style="vertical-align: middle;" :src="reporter.image" alt="">
+          <img v-else class="weui-media-box__thumb" style="vertical-align: middle;" :src="default_image" alt="">
         </div>
         <div class="weui-media-box__bd">
-          <h4 class="weui-media-box__title" v-if="repair.user" v-html="repair.user.user_nick"></h4>
-          <p class="weui-media-box__desc" v-html="repair.created_at_format"></p>
+          <h4 class="weui-media-box__title" v-if="reporter" v-html="reporter.user_nick"></h4>
+          <p class="weui-media-box__desc" v-html="reportinfo.created_at_format"></p>
         </div>
       </div></div>
       <!-- ****** 箭头 ****** -->
-      <div style="width: 20px; line-height: 90px;"><img id="img-arrow" :src="repair.user.image" alt=""></div>
+      <div style="width: 20px; line-height: 90px;">
+        <img v-if="assignee" id="img-arrow" :src="imgarrow" alt="">
+      </div>
       <!-- ****** 维修工作人员 ****** -->
-      <div class="weui-flex__item"><div class="placeholder weui-media-box weui-media-box_appmsg">
-        <div class="weui-media-box__bd" style="text-align: right;" v-if="repair.assigneeinfo">
-          <h4 class="weui-media-box__title" v-html="repair.assigneeinfo.user_nick"></h4>
-          <p class="weui-media-box__desc" v-html="repair.close_time_format"></p>
+      <div v-if="assignee" class="weui-flex__item"><div class="placeholder weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__bd" style="text-align: right;" v-if="assignee">
+          <h4 class="weui-media-box__title" v-html="assignee.user_nick"></h4>
+          <p class="weui-media-box__desc" v-html="repairinfo.created_at_format"></p>
         </div>
         <div class="weui-media-box__hd" style="margin-right: 0px; margin-left: .8em;">
-          <img class="weui-media-box__thumb" style="vertical-align: middle;" :src="repair.assigneeinfo.image" alt="">
+          <img v-if="assignee.image" class="weui-media-box__thumb" style="vertical-align: middle;" :src="assignee.image" alt="">
+          <img v-else class="weui-media-box__thumb" style="vertical-align: middle;" :src="default_image" alt="">
         </div>
       </div></div>
     </div>
     <!-- ****** 描述 ****** -->
     <article class="weui-article" style="padding-top: 0px; padding-bottom: 0px;">
       <p style="color: #999999;">
-        {{ this.repair.description }}
+        {{ this.reportinfo.description }}
       </p>
     </article>
     <!-- ****** 状态 ****** -->
     <div style="padding-left: 15px; padding-right: 15px; vertical-align: middle;">
       <a class="device-repair-status"
          v-bind:class="{
-           'textRed': this.repair.repair.status == 0,
-           'textOrange': this.repair.repair.status == 1,
-           'textBlue': this.repair.repair.status == 2,
-           'textGreen': this.repair.repair.status == 3
+           'textRed': this.reportinfo.status == 0,
+           'textOrange': this.reportinfo.status == 1,
+           'textBlue': this.reportinfo.status == 2,
+           'textGreen': this.reportinfo.status == 3
            }">
-        &nbsp;{{ this.repair.repair.status_name }}&nbsp;
+        &nbsp;{{ this.reportinfo.status_name }}&nbsp;
       </a>
       <rater v-model="stars" :disabled="rater_disabled" :font-size="15" style="float: right;"></rater>
     </div>
@@ -110,6 +114,12 @@
       onConfirm (value) {
         this.$refs.confirmComment.setInputValue('')
         this.$vux.toast.text('input value: ' + value)
+      },
+      hasaAssignee () {
+        if (this.assignee.img) {
+          return true
+        }
+        return false
       }
     },
     mounted () {
@@ -119,11 +129,23 @@
         .then(response => {
           console.log(response.data)
           this.repair = response.data.data
-          this.stars = this.repair.repair.score.score
-          for (var i = 0; i < this.repair.image_list.length; i++) {
-            this.demo01_list.push({url: 'javascript:', img: this.repair.image_list[i]})
+          this.reportinfo = this.repair
+          this.repairinfo = this.repair.repair
+          this.reporter = this.repair.user
+          if (this.assignee) {
+            this.assignee = this.repair.assigneeinfo
           }
-        //  如果当前状态为完成 且属于本人报修 那么rater_disabled = true
+          if (this.repairinfo && this.repairinfo.score) {
+            this.score = this.repairinfo.score
+          }
+          // 评分
+          this.stars = this.score.score
+          // 报修图片
+          for (var i = 0; i < this.reportinfo.image_list.length; i++) {
+            this.demo01_list.push({url: 'javascript:', img: this.reportinfo.image_list[i]})
+          }
+          //  如果当前状态为完成 且属于本人报修 那么rater_disabled = true
+          // console.log(this.reporter.image)
         })
         .catch(error => {
           console.log(error)
@@ -149,7 +171,14 @@
         rater_disabled: false,
         stars: 4,
         comments: [],
-        showAddComment: false
+        showAddComment: false,
+        default_image: 'http://lams-1257122319.cos.ap-beijing.myqcloud.com/20190301b0fbbde3f298a051cb5d464c54b018be',
+        reporter: {},
+        assignee: {},
+        reportinfo: {},
+        repairinfo: {},
+        score: {},
+        imgarrow: ''
       }
     }
   }
