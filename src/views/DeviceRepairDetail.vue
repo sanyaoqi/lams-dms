@@ -109,7 +109,7 @@
       },
       onConfirm (value) {
         this.$refs.confirmComment.setInputValue('')
-        this.$vux.toast.text('input value: ' + value)
+        // this.$vux.toast.text('input value: ' + value)
       }
     },
     mounted () {

@@ -14,21 +14,47 @@
       @on-submit="onSubmit"
       ref="search"></search>
     <!-- TODO 时间排序 筛选样式及逻辑 -->
-    <button @click="clickScreen">筛选</button>
+    <div style="padding: 10px;">
+      <button @click="clickTime">时间</button>
+      <button @click="clickScreen" class="weui-btn weui-btn_mini weui-btn_default" style="float: right;">筛选</button>
+    </div>
+
+    <!-- 筛选弹框 -->
+    <div id="screenBg" v-if="isScreenShow"></div>
+    <div id="screen" style="padding: 15px 0;" v-if="filters.categorys && isScreenShow">
+      <divider>{{ filters.categorys.name }}</divider>
+      <div class="box">
+        <checker v-model="category" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
+          <checker-item value="1">{{ filters.categorys.values[1] }}</checker-item>
+          <checker-item value="2">{{ filters.categorys.values[1] }}</checker-item>
+        </checker>
+      </div>
+      <divider>{{ filters.status.name }}</divider>
+      <div class="box">
+        <checker v-model="status" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
+          <checker-item value="0">{{ filters.status.values[0] }}</checker-item>
+          <checker-item value="1">{{ filters.status.values[1] }}</checker-item>
+          <checker-item value="2">{{ filters.status.values[2] }}</checker-item>
+          <checker-item value="-1">{{ filters.status.values[-1] }}</checker-item>
+        </checker>
+      </div>
+      <div style="line-height: 50px; border-top: 1px;">
+        <btn class="weui-form-preview__btn" @click="endScreen">确定</btn>
+      </div>
+    </div>
+
+    <!-- 列表 -->
     <view-box ref="viewBox">
       <!-- TODO 列表样式调整 -->
       <device-item v-for="device in devices" :device="device" :key="device.id + 'device'">
       </device-item>
     </view-box>
-    <!-- 筛选弹框 -->
-    <screen-view id="screen" v-if="isScreenShow" :is-screen-show.sync="isScreenShow"></screen-view>
   </div>
 </template>
 
 <script>
-import { ViewBox, XHeader, Search } from 'vux'
+import { ViewBox, XHeader, Search, Checker, CheckerItem, Divider } from 'vux'
 import DeviceItem from './DeviceItem'
-import ScreenView from './ScreenView'
 import api from '@/api'
 
 export default {
@@ -37,7 +63,9 @@ export default {
     Search,
     ViewBox,
     DeviceItem,
-    ScreenView
+    Checker,
+    CheckerItem,
+    Divider
   },
   methods: {
     formatDevice (device) {
@@ -49,24 +77,24 @@ export default {
     },
     resultClick (item) {
       window.alert('you click the result item: ' + JSON.stringify(item))
+      this.getData()
     },
     getResult (val) {
       console.log('on-change', val)
-      if (!val) return
-      this.devices = [
-        {
-          'id': '1',
-          'name': 'ivc',
-          'description': 'ivcivcivcivcivcivc',
-          'category': 1,
-          'created_at': 0,
-          'product_at': 0,
-          'owner': 1,
-          'images': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1549871587939&di=ab88e51659a070b40bc5a91d2d06cc41&imgtype=0&src=http%3A%2F%2Fi4.hexunimg.cn%2F2012-07-31%2F144172066.jpg',
-          'status': 0,
-          'position': '1'
-        }
-      ]
+    },
+    getData () {
+      const self = this
+      this.axios
+        .get(api.devices + '?category=' + self.category + '&status=' + self.status + '&keyword=' + self.searchText)
+        .then(response => {
+          console.log(response.data.data)
+          this.devices = response.data.data
+          this.allDevices = response.data.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally()
     },
     onSubmit () {
       console.log('on-submit')
@@ -81,6 +109,14 @@ export default {
     clickScreen () {
       this.isScreenShow = true
       // document.getElementById('screen').style.display = 'block'
+    },
+    clickTime () {
+      // 时间排序
+    },
+    endScreen () {
+      // 确定排序
+      this.isScreenShow = false
+      this.getData()
     }
   },
   watch: {
@@ -92,12 +128,12 @@ export default {
     }
   },
   mounted () {
+    this.getData()
     this.axios
-      .get(api.devices)
+      .get(api.filters)
       .then(response => {
         console.log(response.data.data)
-        this.devices = response.data.data
-        this.allDevices = response.data.data
+        this.filters = response.data.data
       })
       .catch(error => {
         console.log(error)
@@ -109,16 +145,44 @@ export default {
       allDevices: [],
       devices: [],
       searchText: '',
-      isScreenShow: false
+      isScreenShow: false,
+      filters: {},
+      category: '',
+      status: ''
     }
   }
 }
 </script>
 
-<style>
-html, body {
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-}
+<style scoped>
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  #screenBg {
+    position: fixed;
+    z-index: 9998;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: rgba(0,0,0,0.5);
+  }
+  #screen {
+    position: fixed;
+    background-color: white;
+    z-index: 9999;
+  }
+  .box {
+    padding: 0 15px;
+  }
+  .demo1-item {
+    border: 1px solid #ececec;
+    padding: 5px 15px;
+  }
+  .demo1-item-selected {
+    border: 1px solid green;
+  }
 </style>
