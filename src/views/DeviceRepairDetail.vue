@@ -64,7 +64,8 @@
       </div>
     </view-box>
     <button id="add-comment" @click="clickAddComment">评论</button>
-    <div v-transfer-dom style="width: 100%;">
+    <br>
+    <div v-transfer-dom style="left: 50%;">
       <confirm v-model="showAddComment"
                show-input
                ref="confirmComment"
@@ -114,7 +115,7 @@
       onConfirm (value) {
         this.$refs.confirmComment.setInputValue('')
         this.$vux.toast.text('input value: ' + value)
-      },
+      }
     },
     mounted () {
       this.repair_id = window.location.href.split('/repair-detail/')[1]

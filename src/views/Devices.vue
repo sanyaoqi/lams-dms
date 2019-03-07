@@ -26,7 +26,7 @@
       <div class="box">
         <checker v-model="category" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
           <checker-item value="1">{{ filters.categorys.values[1] }}</checker-item>
-          <checker-item value="2">{{ filters.categorys.values[1] }}</checker-item>
+          <checker-item value="2">{{ filters.categorys.values[2] }}</checker-item>
         </checker>
       </div>
       <divider>{{ filters.status.name }}</divider>
@@ -139,6 +139,8 @@ export default {
         console.log(error)
       })
       .finally()
+    // 初始化详情页的标签选项
+    this.$store.commit('setSelected', '详细信息')
   },
   data () {
     return {
