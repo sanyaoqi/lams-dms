@@ -20,7 +20,7 @@
     </div>
     <div>
       <tab :line-width=2 active-color='#fc378c' v-model="index">
-        <tab-item class="vux-center" :selected="selected === item" v-for="(item, index) in list" @click="selected = item" :key="index">{{item}}</tab-item>
+        <tab-item class="vux-center" :selected="selected === item" v-for="(item, index) in list" @on-item-click="onItemClick" :key="index">{{item}}</tab-item>
       </tab>
       <swiper v-model="index" :aspect-ratio="fullHeight"  :show-dots="false" ref="swiper-wrapper" id="swiper-container">
         <swiper-item>
@@ -71,6 +71,10 @@ export default {
       fullHeight: (document.documentElement.clientHeight - document.documentElement.clientWidth * 0.4 - 90) / document.documentElement.clientWidth
     }
   },
+  created () {
+    console.log('this.$store.state.selected :', this.$store.state.selected)
+    this.selected = this.$store.state.selected
+  },
   mounted () {
     this.axios
       .get(api.detail + this.$route.params.id)
@@ -108,7 +112,8 @@ export default {
       }, 1000)
     },
     onItemClick (index) {
-      console.log('on item click:', index)
+      // 存储当前选中的标签 以备返回到这个页面时候跳转
+      this.$store.commit('setSelected', list()[index])
     },
     addTab () {
       if (this.list.length < 5) {
