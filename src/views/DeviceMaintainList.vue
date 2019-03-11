@@ -39,7 +39,11 @@
       this.axios
         .get('http://api.lams.com/maintains')
         .then(response => {
-          this.maintains = response.data
+          if (response.data.code === 200) {
+            this.maintains = response.data.data
+          } else {
+            console.log(response.data.message)
+          }
         })
         .catch(error => {
           console.log(error)
