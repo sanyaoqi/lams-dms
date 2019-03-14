@@ -18,9 +18,9 @@ export default {
 
 <style lang="less">
 @import '~vux/src/styles/reset.less';
+@import '~vux/src/styles/weui/weui.less';
 
 body {
   background-color: #fbf9fe;
-  z-index: 1;
 }
 </style>

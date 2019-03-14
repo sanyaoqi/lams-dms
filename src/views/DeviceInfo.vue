@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="device-description">{{device.description}}</div>
     <div class="weui-form-preview__bd">
       <p v-if="device.owner.user_nick">
         <label class="weui-form-preview__label">创建者</label>
@@ -10,7 +11,7 @@
         <span class="weui-form-preview__value">{{ device.position }}</span>
       </p>
       <p v-if="device.product_at_format">
-        <label class="weui-form-preview__label">创建时间</label>
+        <label class="weui-form-preview__label">出厂时间</label>
         <span class="weui-form-preview__value">{{ device.product_at_format }}</span>
       </p>
       <p v-if="device.contact">
@@ -23,8 +24,8 @@
       </p>
     </div>
 
-    <router-link :to="{path:'/add-repair', query: {device_id: device.id, device: device}}">
-      <button id="add-repair">报修</button>
+    <router-link :to="{path:'/add-repair', query: {device_id: device.id}}">
+      <button id="add-repair" class="add-repair weui_btn weui_btn_primary">报修</button>
     </router-link>
   </div>
 </template>
@@ -48,9 +49,14 @@
     bottom: 40px;
     width: 50px;
     height: 50px;
-    background-color: aqua;
-    z-index: 1000;
+    background-color: #04be02;
+    z-index: 1;
     display: block;
     position: fixed;
+    border-radius: 50%;
+    color: #fff
+  }
+  .device-description {
+    padding: 15px;
   }
 </style>

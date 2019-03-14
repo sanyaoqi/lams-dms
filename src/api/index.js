@@ -19,7 +19,8 @@ let apis = {
   addrepair: prefix + 'report/create',
   repairDetail: prefix + 'reports/',
   repairComment: prefix + 'comments?',
-  weworkToken: prefix + 'user/weworklogin'
+  weworkToken: prefix + 'user/weworklogin',
+  uploadimageserverId: prefix + 'site/upload-image-serverid'
 }
 
 export default apis

@@ -13,7 +13,7 @@
           &nbsp;{{ this.repair.status_name }}&nbsp;
         </a>
       </div>
-      <div class="weui-media-box__desc" style="margin-top: 5px;">
+      <div class="weui-media-box__desc" style="margin-top: 5px;" >
         <a>报修人：{{ this.repair.user.user_nick }}</a>
         <a style="position: absolute; left: 40%;">时间：{{ this.repair.created_at }}</a>
       </div>
@@ -36,6 +36,8 @@
     height: 100%;
     background-color: aquamarine;
     font-size: 0.9rem;
+    border-radius: 5px;
+    padding: 2px;
   }
   .textRed {
     background-color: tomato;

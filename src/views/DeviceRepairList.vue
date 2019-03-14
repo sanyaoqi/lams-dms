@@ -6,12 +6,12 @@
         :key="repair.id + 'repair'"
         :link="'/repair-detail/' + repair.id"
         is-link>
-        <device-repair-item :repair="repair"></device-repair-item>
+        <device-repair-item :repair="repair" ></device-repair-item>
       </cell-box>
     </group>
 
-    <router-link :to="{path:'/add-repair', query: {device_id: device.id, device: device}}">
-      <button id="add-repair">报修</button>
+    <router-link :to="{path:'/add-repair', query: {device_id: device.id}}">
+      <button id="add-repair" v-on:click="" class="add-repair weui_btn weui_btn_primary">报修</button>
     </router-link>
   </div>
 </template>
@@ -35,6 +35,10 @@
       device: Object
     },
     methods: {
+      saveStatus () {
+        console.log(this.device)
+        this.$store.commit('setCurrentRepair', this.device)
+      }
     },
     mounted () {
       this.axios
@@ -61,10 +65,12 @@
     bottom: 40px;
     width: 50px;
     height: 50px;
-    background-color: aqua;
-    z-index: 1000;
+    background-color: #04be02;
+    z-index: 1;
     display: block;
     position: fixed;
+    border-radius: 50%;
+    color: #fff
   }
 </style>
 

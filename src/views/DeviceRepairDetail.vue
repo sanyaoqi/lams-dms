@@ -2,35 +2,42 @@
   <div>
     <x-header>维修记录详情</x-header>
     <swiper :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange"></swiper>
-
-    <div class="weui-flex">
-      <!-- ****** 报修人 ****** -->
-      <div class="weui-flex__item"><div class="placeholder weui-media-box weui-media-box_appmsg">
-        <div class="weui-media-box__hd">
-          <img v-if="reporter.image" class="weui-media-box__thumb" style="vertical-align: middle;" :src="reporter.image" alt="">
-          <img v-else class="weui-media-box__thumb" style="vertical-align: middle;" :src="default_image" alt="">
+    <flexbox :gutter="0">
+      <flexbox-item :span="5/12" >
+        <!-- ****** 报修人 ****** -->
+        <div class="placeholder weui-media-box weui-media-box_appmsg">
+          <div class="weui-media-box__hd">
+            <img v-if="reporter.image" class="weui-media-box__thumb" style="vertical-align: middle;" :src="reporter.image" alt="">
+            <i v-else class="weui-media-box__thum weui_icon_circle" style="vertical-align: middle;"></i>
+          </div>
+          <div class="weui-media-box__bd">
+            <h4 class="weui-media-box__title" v-if="reporter" v-html="reporter.user_nick"></h4>
+            <p class="weui-media-box__desc" v-html="reportinfo.created_at_format"></p>
+          </div>
         </div>
-        <div class="weui-media-box__bd">
-          <h4 class="weui-media-box__title" v-if="reporter" v-html="reporter.user_nick"></h4>
-          <p class="weui-media-box__desc" v-html="reportinfo.created_at_format"></p>
+      </flexbox-item>
+      <flexbox-item :span="1/6">
+        <!-- ****** 箭头 ****** -->
+      </flexbox-item>
+      <flexbox-item :span="5/12" v-if="assignee">
+        <!-- ****** 维修工作人员 ****** -->
+        <div  class="weui-flex__item">
+          <div class="placeholder weui-media-box weui-media-box_appmsg">
+            <div class="weui-media-box__bd" style="text-align: right;" v-if="assignee">
+              <h4 class="weui-media-box__title" v-html="assignee.user_nick"></h4>
+              <p class="weui-media-box__desc" v-html="repairinfo.created_at_format"></p>
+            </div>
+            <div class="weui-media-box__hd" style="margin-right: 0px; margin-left: .8em;">
+              <img v-if="assignee.image" class="weui-media-box__thumb" style="vertical-align: middle;" :src="assignee.image" alt="">
+              <i v-else class="weui-media-box__thum weui_icon_circle" style="vertical-align: middle;"></i>
+            </div>
+          </div>
         </div>
-      </div></div>
-      <!-- ****** 箭头 ****** -->
-      <div style="width: 20px; line-height: 90px;">
-        <img v-if="assignee" id="img-arrow" :src="imgarrow" alt="">
-      </div>
-      <!-- ****** 维修工作人员 ****** -->
-      <div v-if="assignee" class="weui-flex__item"><div class="placeholder weui-media-box weui-media-box_appmsg">
-        <div class="weui-media-box__bd" style="text-align: right;" v-if="assignee">
-          <h4 class="weui-media-box__title" v-html="assignee.user_nick"></h4>
-          <p class="weui-media-box__desc" v-html="repairinfo.created_at_format"></p>
-        </div>
-        <div class="weui-media-box__hd" style="margin-right: 0px; margin-left: .8em;">
-          <img v-if="assignee.image" class="weui-media-box__thumb" style="vertical-align: middle;" :src="assignee.image" alt="">
-          <img v-else class="weui-media-box__thumb" style="vertical-align: middle;" :src="default_image" alt="">
-        </div>
-      </div></div>
-    </div>
+      </flexbox-item>
+      <flexbox-item :span="5/12" v-else>
+        <x-button mini type="primary" class="accept-report">接取</x-button>
+      </flexbox-item>
+    </flexbox>
     <!-- ****** 描述 ****** -->
     <article class="weui-article" style="padding-top: 0px; padding-bottom: 0px;">
       <p style="color: #999999;">
@@ -48,7 +55,13 @@
            }">
         &nbsp;{{ this.reportinfo.status_name }}&nbsp;
       </a>
-      <rater v-model="stars" :disabled="rater_disabled" :font-size="15" style="float: right;"></rater>
+      <rater 
+         v-model="stars" 
+         :disabled="rater_disabled" 
+         :font-size="15" 
+         style="float: right;" 
+         v-if="this.reportinfo.status == 3">
+      </rater>
     </div>
     <!-- ****** 评论 ****** -->
     <view-box ref="viewBox">
@@ -80,7 +93,7 @@
 </template>
 
 <script>
-  import { XHeader, Swiper, SwiperItem, Rater, ViewBox, TransferDom, Confirm } from 'vux'
+  import { XHeader, Swiper, SwiperItem, Rater, ViewBox, TransferDom, Confirm, XButton, Flexbox, FlexboxItem } from 'vux'
   import api from '@/api'
 
   export default {
@@ -94,7 +107,10 @@
       SwiperItem,
       Rater,
       ViewBox,
-      Confirm
+      Confirm,
+      XButton,
+      Flexbox,
+      FlexboxItem
     },
     methods: {
       demo01_onIndexChange (index) {
@@ -191,6 +207,8 @@
     height: 100%;
     background-color: aquamarine;
     font-size: 0.9rem;
+    border-radius: 5px;
+    padding: 2px;
   }
   .textRed {
     background-color: tomato;
@@ -213,6 +231,10 @@
     z-index: 1000;
     display: block;
     position: fixed;
+  }
+  .accept-report {
+    float: right;
+    margin-right: 15px;
   }
 </style>
 

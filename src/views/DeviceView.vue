@@ -1,36 +1,39 @@
 <template>
   <div>
     <x-header>设备管理</x-header>
-    <div class="weui-flex">
-      <div class="weui-flex__item"><div class="placeholder device-detail-info-bg">
-        <div class="weui-panel__bd device-detail-info">
-          <div class="weui-media-box weui-media-box_text" v-if="device !== null">
-            <h2 class="weui-media-box__title">{{device.name}}</h2>
-            <p class="weui-media-box__desc">{{device.description}}</p>
-            <p class="weui-media-box__desc">{{device.category_name}}</p>
-            <p class="weui-media-box__desc">{{device.product_at_format}}</p>
+    <flexbox :gutter="0">
+      <flexbox-item>
+        <div class="placeholder device-detail-info-bg">
+          <div class="weui-panel__bd device-detail-info">
+            <div class="weui-media-box weui-media-box_text" v-if="device !== null">
+              <h2 class="weui-media-box__title">{{device.name}}</h2>
+              <p class="weui-media-box__desc">{{'类型：' + device.category_name}}</p>
+              <p class="weui-media-box__desc">{{'出厂时间：' + device.product_at_format}}</p>
+            </div>
           </div>
         </div>
-      </div></div>
-      <div class="weui-flex__item"><div class="placeholder">
-        <div id="img-bg" style="">
-          <img slot="header" :src="device.images" v-if="device !== null">
+      </flexbox-item>
+      <flexbox-item>
+        <div class="placeholder">
+          <div id="img-bg" style="">
+            <img slot="header" :src="device.images" v-if="device !== null">
+          </div>
         </div>
-      </div></div>
-    </div>
+      </flexbox-item>
+    </flexbox>
     <div>
       <tab :line-width=2 active-color='#fc378c' v-model="index">
         <tab-item class="vux-center" :selected="selected === item" v-for="(item, index) in list" @on-item-click="onItemClick" :key="index">{{item}}</tab-item>
       </tab>
       <swiper v-model="index" :aspect-ratio="fullHeight"  :show-dots="false" ref="swiper-wrapper" id="swiper-container">
         <swiper-item>
-          <device-info class="device-detail-tab-item" v-if="device !== null" :device="device"></device-info>
+          <device-info class="device-detail-tab-item" v-if="device !== null && device.user !== null" :device="device"></device-info>
         </swiper-item>
         <swiper-item>
-          <repair-list class="device-detail-tab-item" v-if="device !== null" :device="device"></repair-list>
+          <repair-list class="device-detail-tab-item" v-if="device !== null && device.user !== null" :device="device"></repair-list>
         </swiper-item>
         <swiper-item>
-          <maintain-list class="device-detail-tab-item" v-if="device !== null" :device_id="device.id"></maintain-list>
+          <maintain-list class="device-detail-tab-item" v-if="device !== null && device.user !== null" :device_id="device.id"></maintain-list>
         </swiper-item>
       </swiper>
     </div>
@@ -38,7 +41,7 @@
 </template>
 
 <script>
-import { Card, Tab, TabItem, Swiper, SwiperItem, XHeader } from 'vux'
+import { Card, Tab, TabItem, Swiper, SwiperItem, XHeader, Flexbox, FlexboxItem } from 'vux'
 import api from '@/api'
 
 const list = () => ['详情信息', '维修记录', '维护记录']
@@ -52,6 +55,8 @@ export default {
     Swiper,
     SwiperItem,
     XHeader,
+    Flexbox,
+    FlexboxItem,
     DeviceInfo: () => import('./DeviceInfo'),
     MaintainList: () => import('./DeviceMaintainList'),
     RepairList: () => import('./DeviceRepairList')
