@@ -1,5 +1,5 @@
 
-// import axios from 'axios'
+import axios from 'axios'
 // import api from '@/api'
 // const SIGNURL = 'http://device.olfu.xyz/device-scan'
 
@@ -19,6 +19,43 @@ var utils = {
     window.localStorage.removeItem('token')
     window.localStorage.removeItem('user')
     window.location.href = 'http://device.olfu.xyz/'
+  },
+  poster: function (url, data, callback) {
+    axios
+      .post(url, data)
+      .then(response => {
+        if (response.data.code === 200) {
+          callback(response.data)
+        } else if (response.data.code === 4009) {
+          self.deletaUserData()
+        } else {
+          alert(response.data.code + ':' + response.data.message)
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+        // alert(error)
+      })
+      .finally()
+  },
+  geter: function (url, callback) {
+    let self = this
+    axios
+      .get(url)
+      .then(response => {
+        if (response.data.code === 200) {
+          callback(response.data)
+        } else if (response.data.code === 4009) {
+          self.deletaUserData()
+        } else {
+          alert(response.data.code + ':' + response.data.message)
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+        // alert(error)
+      })
+      .finally()
   }
 }
 

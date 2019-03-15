@@ -11,16 +11,19 @@
       <textarea placeholder="请输入文字内容" style="width: 90%; height: 150px; padding: 10px;text-align: left;" v-model="text">{{ this.text }}</textarea>
     </div>
     <!-- 上传图片 -->
-    <flexbox :gutter="0" class="image-list">
-      <flexbox-item :span="1/4" v-for="preview in previews" :key="preview.id" class="upload-image">
-        <img :src="preview.fileurl">
-      </flexbox-item>
-      <flexbox-item :span="1/4">
-        <div class="upload-image vux-flexbox-item" id="add-image" @click="clickAddImage">
-          <span>+</span>
-        </div>
-      </flexbox-item>
-    </flexbox>
+    <div class="image-list">
+      <flexbox :gutter="10" wrap="wrap">
+        <flexbox-item :span="2/9" v-for="preview in previews" :key="preview.filekey" class="upload-image">
+          <img :src="preview.fileurl" v-on:click="removeImage(preview.filekey)">
+        </flexbox-item>
+        <flexbox-item :span="2/9" class="upload-image">
+          <div id="add-image" @click="clickAddImage" v-if="this.previews.length < 5">
+            <span>+</span>
+          </div>
+        </flexbox-item>
+      </flexbox>
+    </div>
+    
     <!-- 提交 -->
     <div style="margin: 15px;">
       <x-button @click.native="clickSubmit">提交</x-button>
@@ -40,6 +43,7 @@
   import { XHeader, Swiper, SwiperItem, Datetime, XButton, dateFormat, Flexbox, FlexboxItem, Confirm } from 'vux'
   import utils from '@/utils'
   import api from '@/api'
+  // import testdata from '@/testdata'
 
   export default {
     name: 'DeviceAddRepair',
@@ -52,6 +56,30 @@
       Flexbox,
       FlexboxItem,
       Confirm
+    },
+    mounted () {
+      // this.previews = testdata.getData()
+      this.initWxConfig()
+      this.device_id = this.$route.query.device_id
+      if (this.device_id <= 0) {
+        window.history.go(-1)
+      }
+      this.getDevice(this.device_id)
+    },
+    data () {
+      return {
+        demo01_index: 0,
+        demo01_list: [],
+        value1: dateFormat(new Date(), 'YYYY-MM-DD'),
+        device_id: '',
+        text: '',
+        fullWidth: document.documentElement.clientWidth,
+        wx_config_data: {},
+        previews: [],
+        localIds: [],
+        confirm: false,
+        error_msg: ''
+      }
     },
     methods: {
       initWxConfig () {
@@ -117,58 +145,72 @@
           this.showConfirm()
           return
         }
-        if (this.previews.length === 0) {
-          this.error_msg = '请上传图片'
+        if (this.previews.length > 5) {
+          this.error_msg = '图片最多传5张'
           this.showConfirm()
           return
         }
         let self = this
         var fd = new FormData()
-        var imagesStr = ''
-        for (var i = 0; i < this.previews.length; i++) {
-          if (imagesStr === '') {
-            imagesStr = this.previews[i].filekey
-          } else {
-            imagesStr = imagesStr + ',' + this.previews[i].filekey
-          }
-        }
         fd.append('device_id', this.device_id)
         fd.append('description', this.text)
         fd.append('time', this.value1)
-        fd.append('images', imagesStr)
+        // 添加了图片
+        if (this.previews.length > 0) {
+          var imagesStr = ''
+          for (var i = 0; i < this.previews.length; i++) {
+            if (imagesStr === '') {
+              imagesStr = this.previews[i].filekey
+            } else {
+              imagesStr = imagesStr + ',' + this.previews[i].filekey
+            }
+          }
+          fd.append('images', imagesStr)
+        }
         // fd.append('token', window.localStorage.getItem('token'))
         // alert(api.addrepair + '?token=' + window.localStorage.getItem('token'))
-        self.axios
-          .post(api.addrepair + '?token=' + window.localStorage.getItem('token'), fd)
-          .then(function (response) {
-            // alert(response.data.code)
-            if (response.data.code === 200) {
-              // alert('报修成功')
-              self.$router.go(-1)
-            } else if (response.data.code === 5004) {
-              utils.deletaUserData()
-            } else if (response.data.code === 5009) {
-              utils.deletaUserData()
-            } else {
-              // alert('报修失败' + response.data.code)
-              this.error_msg = response.data.code + ':' + response.data.message
-              this.showConfirm()
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-            // alert(error)
-          })
-          .finally()
+        // self.axios
+        //   .post(api.addrepair + '?token=' + window.localStorage.getItem('token'), fd)
+        //   .then(function (response) {
+        //     // alert(response.data.code)
+        //     if (response.data.code === 200) {
+        //       // alert('报修成功')
+        //       self.$router.go(-1)
+        //     } else if (response.data.code === 5004) {
+        //       utils.deletaUserData()
+        //     } else if (response.data.code === 5009) {
+        //       utils.deletaUserData()
+        //     } else {
+        //       // alert('报修失败' + response.data.code)
+        //       this.error_msg = response.data.code + ':' + response.data.message
+        //       this.showConfirm()
+        //     }
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error)
+        //     // alert(error)
+        //   })
+        //   .finally()
+        let posturl = api.addrepair + '?token=' + window.localStorage.getItem('token')
+        console.log(posturl)
+        utils.poster(posturl, fd, function (response) {
+          self.$router.go(-1)
+        })
       },
       getDevice (id) {
-        this.axios
-          .get(api.detail + id)
-          .then(response => {
-            this.device = response.data.data
-            this.demo01_list = [{url: 'javascript:', img: this.device.images}]
-            // console.log('val ------>>>>>> ', this.device)
-          })
+        // this.axios
+        //   .get(api.detail + id)
+        //   .then(response => {
+        //     this.device = response.data.data
+        //     this.demo01_list = [{url: 'javascript:', img: this.device.images}]
+        //     // console.log('val ------>>>>>> ', this.device)
+        //   })
+        utils.geter(api.detail + id, this.loadData)
+      },
+      loadData (response) {
+        console.log('1111', response)
+        this.device = response.data
+        this.demo01_list = [{url: 'javascript:', img: this.device.images}]
       },
       uploadImage (localId) {
         // alert('start upload image')
@@ -235,29 +277,13 @@
           }
         })
         self.$vux.loading.hide()
-      }
-    },
-    mounted () {
-      this.initWxConfig()
-      this.device_id = this.$route.query.device_id
-      if (this.device_id <= 0) {
-        window.history.go(-1)
-      }
-      this.getDevice(this.device_id)
-    },
-    data () {
-      return {
-        demo01_index: 0,
-        demo01_list: [],
-        value1: dateFormat(new Date(), 'YYYY-MM-DD'),
-        device_id: '',
-        text: '',
-        fullWidth: document.documentElement.clientWidth,
-        wx_config_data: {},
-        previews: [],
-        localIds: [],
-        confirm: false,
-        error_msg: ''
+      },
+      removeImage (key) {
+        for (var i = this.previews.length - 1; i >= 0; i--) {
+          if (this.previews[i].filekey === key) {
+            this.previews.splice(i, 1)
+          }
+        }
       }
     }
   }
@@ -265,11 +291,11 @@
 
 <style scoped>
   .image-list {
-    padding: 10px;
+    padding:5px;
   }
   #add-image {
-    width: 80px;
-    height: 80px;
+    width: 75px;
+    height: 75px;
     background-color: #d9d9d9;
     color: #fff;
     font-size: 44px;
@@ -281,13 +307,21 @@
     font-size: 44px;
   }
   .upload-image {
-    width: 80px;
-    height: 80px;
+    width: 75px;
+    height: 75px;
     display: inline-block;
   }
   .upload-image>img {
-    width: 80px;
-    height: 80px;
+    width: 73px;
+    height: 73px;
     border: 1px solid rgba(0, 0, 0, 0.2)
+  }
+  .vux-flexbox .vux-flexbox-item {
+    margin-left: 10px!important;
+    margin-top: 5px!important;
+  }
+  .vux-flexbox .vux-flexbox-item:first-child {
+    margin-left: 10px!important;
+    margin-top: 5px!important;
   }
 </style>

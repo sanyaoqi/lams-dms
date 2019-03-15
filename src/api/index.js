@@ -1,5 +1,6 @@
 
-const host = 'http://dms.api.olfu.xyz/'
+// const host = 'http://dms.api.olfu.xyz/'
+const host = 'http://api.lams.com/'
 const project = ''
 const prefix = host + project + ''
 
@@ -20,7 +21,9 @@ let apis = {
   repairDetail: prefix + 'reports/',
   repairComment: prefix + 'comments?',
   weworkToken: prefix + 'user/weworklogin',
-  uploadimageserverId: prefix + 'site/upload-image-serverid'
+  uploadimageserverId: prefix + 'site/upload-image-serverid',
+  addcomment: prefix + 'comment/create',
+  acceptReport: prefix + 'report/accept'
 }
 
 export default apis

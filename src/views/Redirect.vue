@@ -20,12 +20,12 @@
         .then(function (response) {
           window.localStorage.setItem('token', response.data.token)
           window.localStorage.setItem('user', response.data.user)
-          alert('新的token是--->>>' + response.data.token)
+          // alert('新的token是--->>>' + response.data.token)
           window.location.href = 'http://device.olfu.xyz/'
         })
         .catch(function (error) {
           console.log(error)
-          alert(error)
+          // alert(error)
         })
         .finally()
     },

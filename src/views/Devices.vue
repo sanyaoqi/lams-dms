@@ -14,32 +14,28 @@
       @on-submit="onSubmit"
       ref="search"></search>
     <!-- TODO 时间排序 筛选样式及逻辑 -->
-    <div style="padding: 10px;">
-      <button @click="clickTime">时间</button>
-      <button @click="clickScreen" class="weui-btn weui-btn_mini weui-btn_default" style="float: right;">筛选</button>
+    <div style="padding: 10px;height: 15px;border-bottom: solid 1px #efeff4;">
+      <!-- <button @click="clickTime">时间</button> -->
+      <div @click="clickScreen" class="weui-media-box__desc" style="float: right;">筛选</div>
     </div>
 
     <!-- 筛选弹框 -->
     <div id="screenBg" v-if="isScreenShow"></div>
-    <div id="screen" style="padding: 15px 0;" v-if="filters.categorys && isScreenShow">
-      <divider>{{ filters.categorys.name }}</divider>
+    <div id="screen" v-if="filters.categorys && isScreenShow">
+      <divider style="padding: 15px;">{{ filters.categorys.name }}</divider>
       <div class="box">
         <checker v-model="category" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
-          <checker-item value="1">{{ filters.categorys.values[1] }}</checker-item>
-          <checker-item value="2">{{ filters.categorys.values[2] }}</checker-item>
+          <checker-item v-for="(cate, cate_index) in categorys" :key="cate_index" :value="cate_index">{{ cate }}</checker-item>
         </checker>
       </div>
-      <divider>{{ filters.status.name }}</divider>
+      <divider style="padding: 15px;">{{ filters.status.name }}</divider>
       <div class="box">
         <checker v-model="status" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
-          <checker-item value="0">{{ filters.status.values[0] }}</checker-item>
-          <checker-item value="1">{{ filters.status.values[1] }}</checker-item>
-          <checker-item value="2">{{ filters.status.values[2] }}</checker-item>
-          <checker-item value="-1">{{ filters.status.values[-1] }}</checker-item>
+          <checker-item v-for="(status, status_index) in statusList" :key="status_index" :value="status_index">{{ status }}</checker-item>
         </checker>
       </div>
       <div style="line-height: 50px; border-top: 1px;">
-        <btn class="weui-form-preview__btn" @click="endScreen">确定</btn>
+        <div class="weui-form-preview__btn" @click="endScreen">确定</div>
       </div>
     </div>
 
@@ -67,6 +63,38 @@ export default {
     CheckerItem,
     Divider
   },
+  mounted () {
+    this.getData()
+    let self = this
+    this.axios
+      .get(api.filters)
+      .then(response => {
+        console.log(response.data.data)
+        self.filters = response.data.data
+        self.categorys = response.data.data.categorys.values
+        self.statusList = response.data.data.status.values
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally()
+    // 初始化详情页的标签选项
+    this.$store.commit('setSelected', '详细信息')
+  },
+  data () {
+    return {
+      allDevices: [],
+      devices: [],
+      searchText: '',
+      isScreenShow: false,
+      filters: {},
+      category: '',
+      categorys: [],
+      statusList: [],
+      status: '',
+      searchCondition: []
+    }
+  },
   methods: {
     formatDevice (device) {
       return {
@@ -80,12 +108,19 @@ export default {
       this.getData()
     },
     getResult (val) {
-      console.log('on-change', val)
+      console.log('on-change', this.searchText)
     },
     getData () {
       const self = this
+      let url = api.devices
+      url += '?category=' + self.category
+      url += '&status=' + self.status
+      if (self.searchText) {
+        url += '&keyword=' + self.searchText
+      }
+      console.log(url)
       this.axios
-        .get(api.devices + '?category=' + self.category + '&status=' + self.status + '&keyword=' + self.searchText)
+        .get(url)
         .then(response => {
           console.log(response.data.data)
           this.devices = response.data.data
@@ -97,7 +132,8 @@ export default {
         .finally()
     },
     onSubmit () {
-      console.log('on-submit')
+      console.log('on-submit', this.searchText)
+      this.getData()
     },
     onFocus () {
       console.log('on focus')
@@ -125,32 +161,6 @@ export default {
       if (oldVal) {
         // document.getElementById('screen').style.display = 'none'
       }
-    }
-  },
-  mounted () {
-    this.getData()
-    this.axios
-      .get(api.filters)
-      .then(response => {
-        console.log(response.data.data)
-        this.filters = response.data.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      .finally()
-    // 初始化详情页的标签选项
-    this.$store.commit('setSelected', '详细信息')
-  },
-  data () {
-    return {
-      allDevices: [],
-      devices: [],
-      searchText: '',
-      isScreenShow: false,
-      filters: {},
-      category: '',
-      status: ''
     }
   }
 }

@@ -10,7 +10,9 @@ import router from './router'
 import { WechatPlugin, LocalePlugin, ConfirmPlugin, AlertPlugin, LoadingPlugin } from 'vux'
 import store from './store'
 import vuexI18n from 'vuex-i18n'
+import testdata from './testdata'
 
+Vue.use(testdata)
 Vue.use(AlertPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
