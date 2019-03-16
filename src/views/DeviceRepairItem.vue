@@ -8,7 +8,8 @@
            'textRed': this.repair.status == 0,
            'textOrange': this.repair.status == 1,
            'textBlue': this.repair.status == 2,
-           'textGreen': this.repair.status == 3
+           'textGreen': this.repair.status == 3,
+           'textGray': this.repair.status == 4
            }">
           &nbsp;{{ this.repair.status_name }}&nbsp;
         </a>
@@ -34,7 +35,7 @@
   .device-repair-status {
     width: 100%;
     height: 100%;
-    background-color: aquamarine;
+    /*background-color: aquamarine;*/
     font-size: 0.9rem;
     border-radius: 5px;
     padding: 2px;

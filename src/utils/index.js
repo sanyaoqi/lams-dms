@@ -20,7 +20,7 @@ var utils = {
     window.localStorage.removeItem('user')
     window.location.href = 'http://device.olfu.xyz/'
   },
-  poster: function (url, data, callback) {
+  post: function (url, data, callback) {
     axios
       .post(url, data)
       .then(response => {
@@ -38,7 +38,7 @@ var utils = {
       })
       .finally()
   },
-  geter: function (url, callback) {
+  get: function (url, callback) {
     let self = this
     axios
       .get(url)

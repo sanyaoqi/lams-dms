@@ -193,7 +193,7 @@
         //   .finally()
         let posturl = api.addrepair + '?token=' + window.localStorage.getItem('token')
         console.log(posturl)
-        utils.poster(posturl, fd, function (response) {
+        utils.post(posturl, fd, function (response) {
           self.$router.go(-1)
         })
       },
@@ -205,7 +205,7 @@
         //     this.demo01_list = [{url: 'javascript:', img: this.device.images}]
         //     // console.log('val ------>>>>>> ', this.device)
         //   })
-        utils.geter(api.detail + id, this.loadData)
+        utils.get(api.detail + id, this.loadData)
       },
       loadData (response) {
         console.log('1111', response)

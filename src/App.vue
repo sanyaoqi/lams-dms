@@ -50,4 +50,19 @@ body {
   color: #fff;
   border: none;
 }
+.textRed {
+  background-color: tomato;
+}
+.textOrange {
+  background-color: gold;
+}
+.textBlue {
+  background-color: deepskyblue;
+}
+.textGreen {
+  background-color: mediumspringgreen;
+}
+.textGray {
+  background-color: #E5E5E5;
+}
 </style>

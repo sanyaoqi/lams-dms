@@ -46,35 +46,48 @@
         {{ this.reportinfo.description }}
       </p>
     </article>
-    <!-- ****** 状态 ****** -->
-    <flexbox :gutter="0" class="report-status">
-      <flexbox-item :span="3/4" >
-        <div style="padding-left: 15px; padding-right: 15px; vertical-align: middle;">
-          <a class="device-repair-status"
-             v-bind:class="{
-               'textRed': this.reportinfo.status == 0,
-               'textOrange': this.reportinfo.status == 1,
-               'textBlue': this.reportinfo.status == 2,
-               'textGreen': this.reportinfo.status == 3
-               }">
-            &nbsp;{{ this.reportinfo.status_name }}&nbsp;
-          </a>
+    <!-- ****** 状态+评分 ****** -->
+    <div class="report-status">
+      <flexbox :gutter="0">
+        <flexbox-item :span="3/4" >
+          <div style="padding-left: 15px; padding-right: 15px; vertical-align: middle;">
+            <a class="device-repair-status"
+               v-bind:class="{
+                 'textRed': this.reportinfo.status == 0,
+                 'textOrange': this.reportinfo.status == 1,
+                 'textBlue': this.reportinfo.status == 2,
+                 'textGreen': this.reportinfo.status == 3,
+                 'textGray': this.reportinfo.status == 4
+                 }">
+              &nbsp;{{ this.reportinfo.status_name }}&nbsp;
+            </a>
+          </div>
+        </flexbox-item>
+        <flexbox-item :span="1/4">
+          <x-button mini type="primary" 
+          class="finish-repair" 
+          v-if="reportinfo.status == 1" 
+          @click.native="finishRepair">完成</x-button>
+          <x-button mini type="primary" 
+          class="finish-report" 
+          v-if="reportinfo.status == 3" 
+          @click.native="closeReport">关闭</x-button>
           <rater 
              v-model="stars" 
-             :disabled="rater_disabled" 
              :font-size="15" 
-             style="float: right;" 
-             v-if="this.reportinfo.status == 3">
+             v-if="reportinfo.status == 4 && can_star">
           </rater>
-        </div>
-      </flexbox-item>
-      <flexbox-item :span="1/4" v-if="reportinfo.status == 1">
-        <x-button mini type="primary" 
-        class="finish-repair" 
-        v-if="reportinfo.status == 1" 
-        @click.native="finishRepair">完成</x-button>
-      </flexbox-item>
-    </flexbox>
+          <rater 
+             v-model="stars" 
+             :font-size="15" 
+             disabled
+             v-if="reportinfo.status == 4 && !can_star"
+             @click.native="scoreConfim">
+          </rater>
+        </flexbox-item>
+      </flexbox>
+    </div>
+    
     <!-- ****** 评论 ****** -->
     <view-box ref="viewBox">
       <!-- TODO 列表样式调整 -->
@@ -147,7 +160,7 @@
         demo01_list: [],
         repair: {},
         rater_disabled: false,
-        stars: 4,
+        stars: 0,
         comments: [],
         showAddComment: false,
         reporter: {},
@@ -158,7 +171,8 @@
         imgarrow: '',
         error_msg: '',
         confirm: false,
-        user: {}
+        user: {},
+        can_star: false
       }
     },
     mounted () {
@@ -178,6 +192,16 @@
         .finally()
       // 报修评论
       self.getCommentList()
+      // console.log(self.score)
+    },
+    watch: {
+      // whenever question changes, this function will run
+      stars: function (newStars, oldStars) {
+        // console.log(newStars, oldStars)
+        if (this.can_star && newStars > 0 && newStars !== oldStars) {
+          this.scoreRepair()
+        }
+      }
     },
     methods: {
       demo01_onIndexChange (index) {
@@ -224,11 +248,15 @@
         if (this.assignee) {
           this.assignee = this.repair.assigneeinfo
         }
+        // 评分
+        this.can_star = true
         if (this.repairinfo && this.repairinfo.score) {
           this.score = this.repairinfo.score
+          if (this.score.score > 0) {
+            this.stars = this.score.score
+            this.can_star = false
+          }
         }
-        // 评分
-        this.stars = this.score.score
         // 报修图片
         for (var i = 0; i < this.reportinfo.image_list.length; i++) {
           let image = {}
@@ -265,7 +293,55 @@
           .finally()
       },
       finishRepair () {
-        console.log('11111')
+        // 完成修理
+        let self = this
+        let geturl = api.finishRepair + '?token=' + window.localStorage.getItem('token')
+        geturl += '&id=' + self.repairinfo.id
+        // console.log(geturl)
+        utils.get(geturl, function (response) {
+          // self.repairinfo = response.data
+          self.loadReportData(response.data)
+        })
+      },
+      closeReport () {
+        // 关闭报修
+        let self = this
+        let geturl = api.closeReport + '?token=' + window.localStorage.getItem('token')
+        geturl += '&id=' + self.reportinfo.id
+        // console.log(geturl)
+        utils.get(geturl, function (response) {
+          // self.repairinfo = response.data
+          self.loadReportData(response.data)
+          self.can_star = true
+        })
+      },
+      scoreRepair () {
+        let self = this
+        // console.log(self.stars)
+        if (self.stars <= 0 || self.stars > 5) {
+          this.error_msg = '请填写正确的分数'
+          this.showConfirm()
+          return
+        }
+        // 为维修服务打分
+        let fd = new FormData()
+        let token = window.localStorage.getItem('token')
+        fd.append('token', token)
+        fd.append('id', self.repairinfo.id)
+        fd.append('type', 1)
+        fd.append('score', self.stars)
+        let posturl = api.score + '?token=' + window.localStorage.getItem('token')
+        // console.log(geturl)
+        utils.post(posturl, fd, function (response) {
+          // self.repairinfo = response.data
+          console.log(response.data)
+          self.score = response.data
+          self.can_star = false
+        })
+      },
+      scoreConfim () {
+        this.error_msg = '不能重复评分！'
+        this.showConfirm()
       },
       clickAddComment () {
         this.showAddComment = true
@@ -324,22 +400,10 @@
   .device-repair-status {
     width: 100%;
     height: 100%;
-    background-color: aquamarine;
+    /*background-color: aquamarine;*/
     font-size: 0.9rem;
     border-radius: 5px;
     padding: 2px;
-  }
-  .textRed {
-    background-color: tomato;
-  }
-  .textOrange {
-    background-color: gold;
-  }
-  .textBlue {
-    background-color: deepskyblue;
-  }
-  .textGreen {
-    background-color: mediumspringgreen;
   }
   .accept-report {
     float: right;

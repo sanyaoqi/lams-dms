@@ -23,7 +23,10 @@ let apis = {
   weworkToken: prefix + 'user/weworklogin',
   uploadimageserverId: prefix + 'site/upload-image-serverid',
   addcomment: prefix + 'comment/create',
-  acceptReport: prefix + 'report/accept'
+  acceptReport: prefix + 'report/accept',
+  finishRepair: prefix + 'repair/finish',
+  closeReport: prefix + 'report/finish',
+  score: prefix + 'score/create'
 }
 
 export default apis
