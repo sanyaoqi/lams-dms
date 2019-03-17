@@ -34,7 +34,8 @@ if (/zh/.test(nowLocale)) {
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
-
+Vue.prototype.user = window.localStorage.getItem('user')
+Vue.prototype.token = window.localStorage.getItem('token')
 /* eslint-disable no-new */
 new Vue({
   router,

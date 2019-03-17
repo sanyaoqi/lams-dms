@@ -26,7 +26,10 @@ let apis = {
   acceptReport: prefix + 'report/accept',
   finishRepair: prefix + 'repair/finish',
   closeReport: prefix + 'report/finish',
-  score: prefix + 'score/create'
+  score: prefix + 'score/create',
+  maintains: prefix + 'device/plan',
+  maintain: prefix + 'maintains',
+  finishPlan: prefix + 'maintain/finish'
 }
 
 export default apis

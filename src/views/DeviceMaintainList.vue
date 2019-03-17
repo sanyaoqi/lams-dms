@@ -6,7 +6,7 @@
         :key="maintain.id + 'maintain'"
         :link="'/maintain-detail/' + maintain.id"
         is-link>
-        <device-maintain-item :maintain="maintain"></device-maintain-item>
+        <device-maintain-item :maintain="maintain" ></device-maintain-item>
       </cell-box>
     </group>
   </div>
@@ -15,6 +15,8 @@
 <script>
   import { Group, Cell, CellBox } from 'vux'
   import DeviceMaintainItem from './DeviceMaintainItem'
+  import utils from '@/utils'
+  import api from '@/api'
 
   export default {
     name: 'DeviceMaintainList',
@@ -27,51 +29,31 @@
     props: {
       device_id: ''
     },
+    mounted () {
+      let self = this
+      let url = api.maintains + '?id=' + self.device_id
+      utils.get(url, self.loadData)
+    },
+    data () {
+      return {
+        maintains: []
+      }
+    },
     methods: {
       formatMaintain (maintain) {
         return {
           id: maintain.id,
           name: maintain.name
         }
-      }
-    },
-    mounted () {
-      this.axios
-        .get('http://api.lams.com/maintains')
-        .then(response => {
-          if (response.data.code === 200) {
-            this.maintains = response.data.data
-          } else {
-            console.log(response.data.message)
-          }
-        })
-        .catch(error => {
-          console.log(error)
-          var arr = []
-          for (var i = 0; i < 1; i++) {
-            arr.push({
-              'id': '1',
-              'name': 'ivc',
-              'description': 'ivcivcivcivcivcivc',
-              'starts': 4
-            })
-            arr.push({
-              'id': '2',
-              'name': 'bbb',
-              'description': 'ivcivcivcivcivcivc',
-              'starts': 5
-            })
-          }
-          this.maintains = arr
-        })
-        .finally()
-    },
-    data () {
-      return {
-        maintains: [{'id': '4',
-          'name': 'ivc',
-          'description': 'ivcivcivcivcivcivc',
-          'starts': 4}]
+      },
+      loadData (response, replace = false) {
+        console.log(response)
+        if (replace) {
+          // 刷新
+          this.maintains = response.data
+        } else {
+          this.maintains = this.maintains.concat(response.data)
+        }
       }
     }
   }
