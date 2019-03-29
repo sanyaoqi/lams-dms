@@ -39,6 +39,7 @@
     font-size: 0.9rem;
     border-radius: 5px;
     padding: 2px;
+    color: #fff;
   }
   .textRed {
     background-color: tomato;

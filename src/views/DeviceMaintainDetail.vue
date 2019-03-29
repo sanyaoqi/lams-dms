@@ -13,7 +13,8 @@
         </p>
         <p v-if="plan.user">
           <label class="weui-form-preview__label">负责人</label>
-          <span class="weui-form-preview__value">{{ plan.user.user_nick }}</span>
+          <span class="weui-form-preview__value" v-if="plan.user.user_nick">{{ plan.user.user_nick }}</span>
+          <span class="weui-form-preview__value" v-else>{{ plan.user.username }}</span>
         </p>
         <p v-if="plan.pre_end_time_format">
           <label class="weui-form-preview__label">开始时间</label>
@@ -30,13 +31,14 @@
             &nbsp;{{ plan.status_name }}&nbsp;
           </span>
         </p>
-        <p>
+        <p >
           <label class="weui-form-preview__label">结束时间</label>
-          <span class="weui-form-preview__value">{{ plan.end_time_format }}</span>
+          <span class="weui-form-preview__value" v-if="plan.end_time_format">{{ plan.end_time_format }}</span>
+          <span class="weui-form-preview__value" v-else> 未完成 </span>
         </p>
       </div>
       <x-button type="primary" 
-        v-if="!canFinish" 
+        v-if="canFinish" 
         class="btn-finish" @click.native="finishPlan()">完成</x-button>
      </div>
   </div>
@@ -45,8 +47,6 @@
 
 <script>
   import { XHeader, Swiper, SwiperItem, CheckIcon, GroupTitle, XButton } from 'vux'
-  import utils from '@/utils'
-  import api from '@/api'
 
   export default {
     name: 'DeviceMaintainDetail',
@@ -66,17 +66,15 @@
         plan: {},
         device: null,
         canFinish: false
-
       }
     },
     mounted () {
-      let self = this
-      self.plan_id = this.$route.params.id
-      if (self.plan_id > 0) {
-        let url = api.maintain + '/' + self.plan_id
-        utils.get(url, self.loadData)
+      this.USER = JSON.parse(window.localStorage.getItem('user'))
+      this.plan_id = this.$route.params.id
+      if (this.plan_id > 0) {
+        let url = this.api.maintain + '/' + this.plan_id
+        this.utils.get(url, this.loadData, this.$vux.confirm)
       }
-      console.log(this.user)
     },
     methods: {
       demo01_onIndexChange (index) {
@@ -93,17 +91,21 @@
             this.demo01_list.push(img)
           }
         }
+        if (this.USER && this.USER.id > 0 && this.USER.id === this.plan.user.id && this.plan.status === 1) {
+          this.canFinish = true
+        }
+        // console.log(this.user, this.canFinish)
       },
       finishPlan () {
         let self = this
         if (self.plan_id > 0) {
           let token = window.localStorage.getItem('token')
-          let url = api.finishPlan + '?id=' + self.plan_id + '&token=' + token
-          utils.get(url, function (response) {
+          let url = self.api.finishPlan + '?id=' + self.plan_id + '&token=' + token
+          self.utils.get(url, function (response) {
             if (response) {
               self.loadData(response)
             }
-          })
+          }, self.$vux.confirm)
         }
       }
     }
@@ -123,5 +125,13 @@
   }
   .plan-description {
     padding: 15px;
+  }
+  .device-maintain-status {
+    width: 100%;
+    height: 100%;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    padding: 2px;
+    color: #fff;
   }
 </style>

@@ -9,7 +9,8 @@ const store = new Vuex.Store({
   state: {
     configFlag: false,
     selected: '详细信息',
-    currentRepair: {}
+    currentRepair: {},
+    goback: '/'
   },
   modules: {
     i18n: vuexI18n.store
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
     },
     setCurrentRepair (state, device) {
       state.currentRepair = device
+    },
+    setGoback (state, url) {
+      state.goback = url
     }
   }
 })

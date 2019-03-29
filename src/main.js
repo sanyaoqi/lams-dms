@@ -11,6 +11,8 @@ import { WechatPlugin, LocalePlugin, ConfirmPlugin, AlertPlugin, LoadingPlugin }
 import store from './store'
 import vuexI18n from 'vuex-i18n'
 import testdata from './testdata'
+import utils from './utils'
+import api from './api'
 
 Vue.use(testdata)
 Vue.use(AlertPlugin)
@@ -34,8 +36,11 @@ if (/zh/.test(nowLocale)) {
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
-Vue.prototype.user = window.localStorage.getItem('user')
-Vue.prototype.token = window.localStorage.getItem('token')
+Vue.prototype.USER = null
+Vue.prototype.TOKEN = null
+Vue.prototype.utils = utils
+Vue.prototype.api = api
+
 /* eslint-disable no-new */
 new Vue({
   router,

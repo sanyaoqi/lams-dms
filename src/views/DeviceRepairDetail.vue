@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div v-if="reportinfo">
     <x-header>维修记录详情</x-header>
-    <swiper auto :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange" v-if="demo01_list.length > 0"></swiper>
+    <swiper auto :list="demo01_list"
+     v-model="demo01_index" 
+     @on-index-change="demo01_onIndexChange" 
+     class="report-images"></swiper>
     <!-- ****** 轮播 ****** -->
     <!-- <swiper loop auto :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange" dots-position="center" :aspect-ratio="300/800"></swiper> -->
     <flexbox :gutter="0">
-      <flexbox-item :span="6/12" >
+      <flexbox-item :span="6/12" v-if="reporter" >
         <!-- ****** 报修人 ****** -->
         <div class="placeholder weui-media-box weui-media-box_appmsg">
           <div class="weui-media-box__hd">
@@ -18,7 +21,7 @@
           </div>
         </div>
       </flexbox-item>
-      <flexbox-item :span="6/12" v-if="assignee">
+      <flexbox-item :span="6/12" v-if="assignee && repairinfo">
         <!-- ****** 维修工作人员 ****** -->
         <div  class="weui-flex__item">
           <div class="placeholder weui-media-box weui-media-box_appmsg">
@@ -36,7 +39,7 @@
       <flexbox-item :span="6/12" v-else>
         <x-button mini type="primary" 
         class="accept-report" 
-        v-if="reportinfo.status == 0" 
+        v-if="can_accept_report" 
         @click.native="acceptReport">接取</x-button>
       </flexbox-item>
     </flexbox>
@@ -53,11 +56,11 @@
           <div style="padding-left: 15px; padding-right: 15px; vertical-align: middle;">
             <a class="device-repair-status"
                v-bind:class="{
-                 'textRed': this.reportinfo.status == 0,
-                 'textOrange': this.reportinfo.status == 1,
-                 'textBlue': this.reportinfo.status == 2,
-                 'textGreen': this.reportinfo.status == 3,
-                 'textGray': this.reportinfo.status == 4
+                 'textRed': this.reportinfo.status == this.status_list.new.id,
+                 'textOrange': this.reportinfo.status == this.status_list.doing.id,
+                 'textBlue': this.reportinfo.status == this.status_list.canceled.id,
+                 'textGreen': this.reportinfo.status == this.status_list.repaired.id,
+                 'textGray': this.reportinfo.status == this.status_list.finished.id
                  }">
               &nbsp;{{ this.reportinfo.status_name }}&nbsp;
             </a>
@@ -66,30 +69,29 @@
         <flexbox-item :span="1/4">
           <x-button mini type="primary" 
           class="finish-repair" 
-          v-if="reportinfo.status == 1" 
+          v-if="reportinfo.status === this.status_list.doing.id && can_repair" 
           @click.native="finishRepair">完成</x-button>
           <x-button mini type="primary" 
           class="finish-report" 
-          v-if="reportinfo.status == 3" 
+          v-if="can_close" 
           @click.native="closeReport">关闭</x-button>
           <rater 
              v-model="stars" 
              :font-size="15" 
-             v-if="reportinfo.status == 4 && can_star">
+             v-if="reportinfo.status == this.status_list.finished.id && can_star">
           </rater>
           <rater 
              v-model="stars" 
              :font-size="15" 
              disabled
-             v-if="reportinfo.status == 4 && !can_star"
+             v-if="reportinfo.status == this.status_list.finished.id && !can_star"
              @click.native="scoreConfim">
           </rater>
         </flexbox-item>
       </flexbox>
     </div>
-    
     <!-- ****** 评论 ****** -->
-    <view-box ref="viewBox">
+    <view-box ref="viewBox" v-if="comments.length > 0" class="position-comments-box">
       <!-- TODO 列表样式调整 -->
       <div v-for="comment in comments" :key="comment.id + 'comment'" class="weui-media-box weui-media-box_appmsg">
         <div class="weui-media-box__hd" v-if="comment.user.image">
@@ -106,6 +108,11 @@
           </flexbox>
           <p class="weui-media-box__desc" v-html="comment.content"></p>
         </div>
+      </div>
+      <div class="more-comment" v-if="comments.length == 10" @click="toCommentList">
+        <p class="weui-media-box__desc">
+          点击查看更多评论
+        </p>
       </div>
     </view-box>
     <button id="add-comment" @click="clickAddComment">评论</button>
@@ -134,8 +141,6 @@
 
 <script>
   import { XHeader, Swiper, SwiperItem, Rater, ViewBox, TransferDom, Confirm, XButton, Flexbox, FlexboxItem } from 'vux'
-  import api from '@/api'
-  import utils from '@/utils'
 
   export default {
     name: 'DeviceRepairDetail',
@@ -158,41 +163,63 @@
         repair_id: '',
         demo01_index: 0,
         demo01_list: [],
-        repair: {},
         rater_disabled: false,
         stars: 0,
         comments: [],
         showAddComment: false,
         reporter: {},
-        assignee: {},
-        reportinfo: {},
-        repairinfo: {},
-        score: {},
+        assignee: null,
+        reportinfo: null,
+        repairinfo: null,
+        score: null,
         imgarrow: '',
         error_msg: '',
         confirm: false,
-        user: {},
-        can_star: false
+        can_star: false,
+        can_repair: false,
+        can_accept_report: false,
+        can_close: false,
+        status_list: {
+          new: {
+            id: 0,
+            name: '新建'
+          },
+          doing: {
+            id: 1,
+            name: '处理中'
+          },
+          canceled: {
+            id: 2,
+            name: '已经取消'
+          },
+          repaired: {
+            id: 3,
+            name: '完成修理'
+          },
+          finished: {
+            id: 4,
+            name: '完成'
+          }
+        }
       }
     },
     mounted () {
-      this.repair_id = window.location.href.split('/repair-detail/')[1]
       let self = this
-      // 报修详情
-      self.axios
-        .get(api.repairDetail + this.repair_id)
-        .then(response => {
-          self.loadReportData(response.data.data)
-          // 如果当前状态为完成 且属于本人报修 那么rater_disabled = true
-          // console.log(this.reporter.image)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally()
-      // 报修评论
-      self.getCommentList()
-      // console.log(self.score)
+      self.USER = JSON.parse(window.localStorage.getItem('user'))
+      self.TOKEN = window.localStorage.getItem('token')
+      this.$nextTick(() => {
+        self.repair_id = self.$route.params.id
+        let url = self.api.repairDetail + self.repair_id
+        // 报修详情
+        self.utils.get(url, function (response) {
+          self.loadReportData(response.data)
+          self.getCommentList()
+        }, self.$vux.confirm)
+        // 报修评论
+        // self.getCommentList()
+        // alert(this.USER.id)
+        // console.log(self.score)
+      })
     },
     watch: {
       // whenever question changes, this function will run
@@ -229,24 +256,18 @@
       },
       getCommentList () {
         let self = this
-        self.axios
-          .get(api.repairComment + 'object_id=' + self.repair_id + '&object_type=' + '1')
-          .then(response => {
-            // console.log(response.data.data)
-            self.comments = response.data.data
-          })
-          .catch(error => {
-            console.log(error)
-          })
-          .finally()
+        let url = this.api.repairComment + 'object_id=' + this.repair_id + '&object_type=' + '1'
+        self.utils.get(url, function (response) {
+          // console.log(response)
+          self.comments = response.data
+        }, this.$vux.confirm)
       },
       loadReportData (report) {
-        this.repair = report
-        this.reportinfo = this.repair
-        this.repairinfo = this.repair.repair
-        this.reporter = this.repair.user
-        if (this.assignee) {
-          this.assignee = this.repair.assigneeinfo
+        this.reportinfo = report
+        this.repairinfo = this.reportinfo.repair
+        this.reporter = this.reportinfo.user
+        if (this.reportinfo.assignee) {
+          this.assignee = this.reportinfo.assigneeinfo
         }
         // 评分
         this.can_star = true
@@ -257,48 +278,50 @@
             this.can_star = false
           }
         }
-        // 报修图片
-        for (var i = 0; i < this.reportinfo.image_list.length; i++) {
-          let image = {}
-          image.url = 'javascript:'
-          image.img = this.reportinfo.image_list[i]
-          // image.title = '' + i
-          this.demo01_list.push(image)
+        if (this.reportinfo.status === this.status_list.new.id && this.USER && this.USER.role === 10) {
+          this.can_accept_report = true
+        }
+        // 当前用户为修理人时
+        if (this.USER) {
+          if (this.assignee && this.USER.id === this.assignee.id) {
+            this.can_repair = true
+          }
+          if (this.reporter && this.USER.id === this.reporter.id) {
+            if (this.reportinfo.status === this.status_list.repaired.id) {
+              this.can_close = true
+            }
+          }
+        }
+        if (this.reportinfo.image_list.length > 0) {
+          // 报修图片
+          for (var i = 0; i < this.reportinfo.image_list.length; i++) {
+            let image = {}
+            image.url = 'javascript:'
+            image.img = this.reportinfo.image_list[i]
+            // image.title = '' + i
+            this.demo01_list.push(image)
+          }
         }
       },
       acceptReport () {
-        let posturl = api.acceptReport
+        let posturl = this.api.acceptReport
         let self = this
         let fd = new FormData()
         let token = window.localStorage.getItem('token')
         fd.append('token', token)
         fd.append('id', this.repair_id)
         // console.log(token, this.repair_id, posturl)
-        self.axios
-          .post(posturl, fd)
-          .then(function (response) {
-            if (response.data.code === 200) {
-              self.loadReportData(response.data.data)
-            } else if (response.data.code === 5009) {
-              utils.deletaUserData()
-            } else {
-              self.error_msg = response.data.code + ':' + response.data.message
-              self.showConfirm()
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-            // alert(error)
-          })
-          .finally()
+        this.utils.post(posturl, fd, function (response) {
+          self.loadReportData(response.data)
+        }, this.$vux.confirm)
       },
       finishRepair () {
         // 完成修理
         let self = this
-        let geturl = api.finishRepair + '?token=' + window.localStorage.getItem('token')
+        let geturl = this.api.finishRepair + '?token=' + window.localStorage.getItem('token')
         geturl += '&id=' + self.repairinfo.id
         // console.log(geturl)
-        utils.get(geturl, function (response) {
+        this.utils.get(geturl, function (response) {
           // self.repairinfo = response.data
           self.loadReportData(response.data)
         })
@@ -306,37 +329,45 @@
       closeReport () {
         // 关闭报修
         let self = this
-        let geturl = api.closeReport + '?token=' + window.localStorage.getItem('token')
+        let geturl = this.api.closeReport + '?token=' + window.localStorage.getItem('token')
         geturl += '&id=' + self.reportinfo.id
         // console.log(geturl)
-        utils.get(geturl, function (response) {
+        this.utils.get(geturl, function (response) {
           // self.repairinfo = response.data
           self.loadReportData(response.data)
           self.can_star = true
+          self.can_close = false
         })
       },
       scoreRepair () {
         let self = this
         // console.log(self.stars)
-        if (self.stars <= 0 || self.stars > 5) {
+        if (this.stars <= 0 || this.stars > 5) {
           this.error_msg = '请填写正确的分数'
           this.showConfirm()
           return
         }
-        // 为维修服务打分
-        let fd = new FormData()
-        let token = window.localStorage.getItem('token')
-        fd.append('token', token)
-        fd.append('id', self.repairinfo.id)
-        fd.append('type', 1)
-        fd.append('score', self.stars)
-        let posturl = api.score + '?token=' + window.localStorage.getItem('token')
-        // console.log(geturl)
-        utils.post(posturl, fd, function (response) {
-          // self.repairinfo = response.data
-          console.log(response.data)
-          self.score = response.data
-          self.can_star = false
+        this.$vux.confirm.show({
+          title: '提示',
+          content: '为本次维修服务打 ' + this.stars + ' 颗星',
+          showCancelButton: true,
+          onConfirm: function () {
+            // 为维修服务打分
+            let fd = new FormData()
+            self.TOKEN = window.localStorage.getItem('token')
+            fd.append('token', self.TOKEN)
+            fd.append('id', self.repairinfo.id)
+            fd.append('type', 1)
+            fd.append('score', self.stars)
+            let posturl = self.api.score + '?token=' + self.TOKEN
+            // console.log(geturl)
+            self.utils.post(posturl, fd, function (response) {
+              // self.repairinfo = response.data
+              // console.log(response.data)
+              self.score = response.data
+              self.can_star = false
+            })
+          }
         })
       },
       scoreConfim () {
@@ -344,7 +375,13 @@
         this.showConfirm()
       },
       clickAddComment () {
-        this.showAddComment = true
+        if (this.TOKEN) {
+          this.showAddComment = true
+        } else {
+          // console.log('111', this.TOKEN)
+          this.utils.deletaUserData()
+          // 去登陆吧
+        }
       },
       onConfirmComment (value) {
         this.sendComment(value)
@@ -357,34 +394,19 @@
           this.showConfirm()
           return
         }
-        let posturl = api.addcomment
+        let posturl = this.api.addcomment
         let fd = new FormData()
-        let token = window.localStorage.getItem('token')
-        fd.append('token', token)
+        fd.append('token', this.TOKEN)
         fd.append('id', this.repair_id)
         fd.append('type', 1)
         fd.append('content', message)
         // console.log(posturl)
-        self.axios
-          .post(posturl, fd)
-          .then(function (response) {
-            if (response.data.code === 200) {
-              // console.log('data', response.data.data)
-              self.comments.unshift(response.data.data)
-            } else if (response.data.code === 5009) {
-              utils.deletaUserData()
-            } else {
-              // alert('报修失败' + response.data.code)
-              self.error_msg = response.data.code + ':' + response.data.message
-              self.showConfirm()
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-            // alert(error)
-          })
-          .finally()
-        // console.log(token, self.repair_id, message, fd)
+        this.utils.post(posturl, fd, function (response) {
+          self.comments.unshift(response.data)
+        }, this.$vux.confirm)
+      },
+      toCommentList () {
+        this.$router.push({path: '/comments/' + this.repair_id})
       }
     }
   }
@@ -404,6 +426,7 @@
     font-size: 0.9rem;
     border-radius: 5px;
     padding: 2px;
+    color: #fff;
   }
   .accept-report {
     float: right;
@@ -417,6 +440,18 @@
   .report-desc {
     border-top: solid 1px #E5E5E5;
     padding: 10px 15px 0px 15px;
+    height: 120px;
+    overflow: hidden;
+  }
+  .report-images {
+    height: 180px;
+  }
+  .more-comment {
+    height: 30px;
+    text-align: center;
+  }
+  .more-comment>p {
+    line-height: 30px;
   }
 </style>
 

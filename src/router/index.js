@@ -8,6 +8,12 @@ import RepairDetail from '../views/DeviceRepairDetail'
 import AddRepair from '../views/DeviceAddRepair'
 import Redirect from '../views/Redirect'
 import DeviceScan from '../views/DeviceScan'
+import TestScrollLoad from '../views/TestScrollLoad'
+import CommentList from '../views/CommentList'
+import ReportList from '../views/ReportList'
+import MyMaintains from '../views/MyMaintains'
+import MyRepairs from '../views/MyRepairs'
+import DevicePage from '../views/DevicePage'
 
 Vue.use(Router)
 
@@ -51,6 +57,36 @@ const routes = [
     path: '/device-scan',
     name: 'device-scan',
     component: DeviceScan
+  },
+  {
+    path: '/comments/:id',
+    name: 'comments',
+    component: CommentList
+  },
+  {
+    path: '/reports',
+    name: 'reports',
+    component: ReportList
+  },
+  {
+    path: '/myrepairs',
+    name: 'myrepairs',
+    component: MyRepairs
+  },
+  {
+    path: '/mymaintains',
+    name: 'mymaintains',
+    component: MyMaintains
+  },
+  {
+    path: '/device-page/:id',
+    name: 'device-page',
+    component: DevicePage
+  },
+  {
+    path: '/testscoll',
+    name: 'testscoll',
+    component: TestScrollLoad
   }
 ]
 

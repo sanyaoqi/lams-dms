@@ -1,6 +1,6 @@
 
-// const host = 'http://dms.api.olfu.xyz/'
-const host = 'http://api.lams.com/'
+const host = 'http://dms.api.olfu.xyz/'
+// const host = 'http://api.lams.com/'
 const project = ''
 const prefix = host + project + ''
 
@@ -29,7 +29,9 @@ let apis = {
   score: prefix + 'score/create',
   maintains: prefix + 'device/plan',
   maintain: prefix + 'maintains',
-  finishPlan: prefix + 'maintain/finish'
+  finishPlan: prefix + 'maintain/finish',
+  reportList: prefix + 'reports',
+  repairList: prefix + 'repairs'
 }
 
 export default apis

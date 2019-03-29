@@ -1,15 +1,18 @@
 <template style="height:100%;">
   <div style="overflow-y: hidden;">
-    <group style="height:100%; overflow-y: scroll;" :gutter="0">
-      <cell-box
-        v-for="repair in repairs"
-        :key="repair.id + 'repair'"
-        :link="'/repair-detail/' + repair.id"
-        is-link>
-        <device-repair-item :repair="repair" ></device-repair-item>
-      </cell-box>
-    </group>
-
+    <div class="position-report-box">
+      <div class="wrapper" ref="wrapper">
+        <!-- <group style="height:100%; overflow-y: scroll;" :gutter="0" > -->
+          <cell-box
+            v-for="repair in repairs"
+            :key="repair.id + 'repair'"
+            :link="'/repair-detail/' + repair.id"
+            is-link>
+            <device-repair-item :repair="repair" ></device-repair-item>
+          </cell-box>
+        <!-- </group> -->
+      </div>
+    </div>
     <router-link :to="{path:'/add-repair', query: {device_id: device.id}}">
       <button id="add-repair" v-on:click="" class="add-repair weui_btn weui_btn_primary">报修</button>
     </router-link>

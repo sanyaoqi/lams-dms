@@ -18,9 +18,9 @@
       <!-- <button @click="clickTime">时间</button> -->
       <div @click="clickScreen" class="weui-media-box__desc" style="float: right;">筛选</div>
     </div>
-
     <!-- 筛选弹框 -->
-    <div id="screenBg" v-if="isScreenShow"></div>
+    <div id="screenBg" v-if="isScreenShow">
+    </div>
     <div id="screen" v-if="filters.categorys && isScreenShow">
       <divider style="padding: 15px;">{{ filters.categorys.name }}</divider>
       <div class="box">
@@ -38,18 +38,23 @@
         <div class="weui-form-preview__btn" @click="endScreen">确定</div>
       </div>
     </div>
-
     <!-- 列表 -->
-    <view-box ref="viewBox">
-      <!-- TODO 列表样式调整 -->
-      <device-item v-for="device in devices" :device="device" :key="device.id + 'device'">
-      </device-item>
-    </view-box>
+    <div class="position-devices-box">
+      <div class="wrapper" ref="wrapper">
+        <div class="content">
+          <device-item v-for="device in devices" :device="device" :key="device.id + 'device'">
+          </device-item>
+          <div class="no-more weui-media-box__desc" v-if="nomore">没有更多数据了</div>
+        </div>
+      </div>
+    </div>
+    <button @click="scrollTo" class="go-top weui_btn weui_btn_primary">^</button>
   </div>
 </template>
 
 <script>
 import { ViewBox, XHeader, Search, Checker, CheckerItem, Divider } from 'vux'
+import Bscroll from 'better-scroll'
 import DeviceItem from './DeviceItem'
 import api from '@/api'
 
@@ -64,20 +69,18 @@ export default {
     Divider
   },
   mounted () {
-    this.getData()
-    let self = this
-    this.axios
-      .get(api.filters)
-      .then(response => {
-        console.log(response.data.data)
-        self.filters = response.data.data
-        self.categorys = response.data.data.categorys.values
-        self.statusList = response.data.data.status.values
+    this.$nextTick(() => {
+      this.scroll = new Bscroll(this.$refs.wrapper, {
+        pullDownRefresh: this.pullDownRefreshObj,
+        click: true
       })
-      .catch(error => {
-        console.log(error)
-      })
-      .finally()
+      this.onPullingDown()
+      // 绑定下拉刷新方法
+      this.scroll.on('pullingDown', this.onPullingDown)
+      // 绑定上拉加载更多方法
+      this.scroll.on('scrollEnd', this.onPullingUp)
+    })
+    this.getFilters()
     // 初始化详情页的标签选项
     this.$store.commit('setSelected', '详细信息')
   },
@@ -92,10 +95,110 @@ export default {
       categorys: [],
       statusList: [],
       status: '',
-      searchCondition: []
+      searchCondition: [],
+      scroll,
+      pullDownRefreshObj: {
+        threshold: 50,
+        stop: 20
+      },
+      startY: 0, // 纵轴方向初始化位置
+      scrollToX: 0,
+      scrollToY: 0,
+      scrollToTime: 700,
+      page: 1,
+      maxpage: 0,
+      nomore: false
     }
   },
   methods: {
+    // 滚动到页面顶部
+    scrollTo () {
+      this.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime)
+    },
+    onPullingDown () {
+      // 模拟下拉刷新
+      console.log('下拉刷新')
+      this.page = 1
+      let url = this.api.devices
+      url += '?category=' + this.category
+      url += '&status=' + this.status
+      url += '&page=' + this.page
+      if (this.searchText) {
+        url += '&keyword=' + this.searchText
+      }
+      console.log(url)
+      this.utils.get(url, this.loadData, this.$vux.confirm)
+    },
+    onPullingUp () {
+      // 模拟上拉 加载更多数据
+      if (!this.nomore && this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+        this.page++
+        console.log('上拉加载', this.page)
+        let url = this.api.devices
+        url += '?category=' + this.category
+        url += '&status=' + this.status
+        url += '&page=' + this.page
+        if (this.searchText) {
+          url += '&keyword=' + this.searchText
+        }
+        if (this.page <= this.maxpage) {
+          this.utils.get(url, this.addData, this.$vux.confirm)
+        } else {
+          this.nomore = true
+          // this.$vux.confirm.show({
+          //   title: '提示',
+          //   content: '没有更多数据了！'
+          // })
+        }
+      }
+    },
+    addData (response) {
+      // 加载更多数据
+      console.log(response)
+      this.devices = this.devices.concat(response.data)
+      this.allDevices = this.allDevices.concat(response.data)
+      // test
+      if (response.pagination.totalCount > 0 && response.pagination.defaultPageSize) {
+        this.maxpage = Math.ceil(response.pagination.totalCount / response.pagination.defaultPageSize)
+      }
+      console.log(this.maxpage)
+      this.refreshScroll()
+    },
+    loadData (response) {
+      // 刷新列表数据
+      this.devices = response.data
+      this.allDevices = response.data
+      if (response.pagination.totalCount > 0 && response.pagination.defaultPageSize) {
+        this.maxpage = Math.ceil(response.pagination.totalCount / response.pagination.defaultPageSize)
+      }
+      console.log(this.maxpage)
+      this.refreshScroll()
+    },
+    refreshScroll () {
+      let self = this
+      this.$nextTick(() => {
+        if (!self.scroll) {
+          self.scroll = new Bscroll(self.$refs.wrapper, {
+            pullDownRefresh: self.pullDownRefreshObj,
+            click: true
+          })
+        } else {
+          self.scroll.refresh()
+        }
+        // 完成加载必须调用
+        self.scroll.finishPullDown()
+      })
+    },
+    // 获取过滤器
+    getFilters () {
+      let self = this
+      this.utils.get(this.api.filters, function (response) {
+        console.log(response)
+        self.filters = response.data
+        self.categorys = response.data.categorys.values
+        self.statusList = response.data.status.values
+      }, this.$vux.confirm)
+    },
     formatDevice (device) {
       return {
         title: device.name,
@@ -105,7 +208,17 @@ export default {
     },
     resultClick (item) {
       window.alert('you click the result item: ' + JSON.stringify(item))
-      this.getData()
+      this.$nextTick(() => {
+        this.scroll = new Bscroll(this.$refs.wrapper, {
+          pullDownRefresh: this.pullDownRefreshObj,
+          click: true
+        })
+        this.onPullingDown()
+        // 绑定下拉刷新方法
+        this.scroll.on('pullingDown', this.onPullingDown)
+        // 绑定上拉加载更多方法
+        this.scroll.on('scrollEnd', this.onPullingUp)
+      })
     },
     getResult (val) {
       console.log('on-change', this.searchText)
@@ -133,7 +246,17 @@ export default {
     },
     onSubmit () {
       console.log('on-submit', this.searchText)
-      this.getData()
+      this.$nextTick(() => {
+        this.scroll = new Bscroll(this.$refs.wrapper, {
+          pullDownRefresh: this.pullDownRefreshObj,
+          click: true
+        })
+        this.onPullingDown()
+        // 绑定下拉刷新方法
+        this.scroll.on('pullingDown', this.onPullingDown)
+        // 绑定上拉加载更多方法
+        this.scroll.on('scrollEnd', this.onPullingUp)
+      })
     },
     onFocus () {
       console.log('on focus')
@@ -152,7 +275,17 @@ export default {
     endScreen () {
       // 确定排序
       this.isScreenShow = false
-      this.getData()
+      this.$nextTick(() => {
+        this.scroll = new Bscroll(this.$refs.wrapper, {
+          pullDownRefresh: this.pullDownRefreshObj,
+          click: true
+        })
+        this.onPullingDown()
+        // 绑定下拉刷新方法
+        this.scroll.on('pullingDown', this.onPullingDown)
+        // 绑定上拉加载更多方法
+        this.scroll.on('scrollEnd', this.onPullingUp)
+      })
     }
   },
   watch: {
@@ -196,5 +329,16 @@ export default {
   }
   .demo1-item-selected {
     border: 1px solid green;
+  }
+  .position-devices-box {
+    position: fixed;
+    top: 125px;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+  }
+  .wrapper {
+    height: 100%;
+    overflow: hidden;
   }
 </style>

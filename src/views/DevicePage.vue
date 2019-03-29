@@ -47,7 +47,7 @@ import api from '@/api'
 const list = () => ['详情信息', '维修记录', '维护记录']
 
 export default {
-  name: 'device-view',
+  name: 'device-page',
   components: {
     Card,
     Tab,

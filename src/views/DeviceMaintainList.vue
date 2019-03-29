@@ -1,14 +1,18 @@
 <template style="height:100%">
   <div style="height:100%;">
-    <group style="height:100%; overflow-y: scroll;" :gutter="0">
-      <cell-box
-        v-for="maintain in maintains"
-        :key="maintain.id + 'maintain'"
-        :link="'/maintain-detail/' + maintain.id"
-        is-link>
-        <device-maintain-item :maintain="maintain" ></device-maintain-item>
-      </cell-box>
-    </group>
+    <div class="position-maintain-box">
+      <div class="wrapper" ref="wrapper">
+        <group style="height:100%; overflow-y: scroll;" :gutter="0">
+          <cell-box
+            v-for="maintain in maintains"
+            :key="maintain.id + 'maintain'"
+            :link="'/maintain-detail/' + maintain.id"
+            is-link>
+            <device-maintain-item :maintain="maintain" ></device-maintain-item>
+          </cell-box>
+        </group>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -54,15 +58,29 @@
         } else {
           this.maintains = this.maintains.concat(response.data)
         }
+        // this.maintains = this.maintains.concat(response.data)
+        // this.maintains = this.maintains.concat(response.data)
+        // this.maintains = this.maintains.concat(response.data)
       }
     }
   }
 </script>
 
 <style scoped>
-  html, body {
+  /*html, body {
     height: 100%;
     width: 100%;
     overflow-x: hidden;
+  }*/
+  .position-maintain-box {
+    position: fixed;
+    top: 0px;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+  }
+  .wrapper {
+    height: 100%;
+    overflow: hidden;
   }
 </style>

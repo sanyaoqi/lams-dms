@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'app',
   data () {
@@ -25,8 +24,8 @@ body {
 }
 
 #add-repair {
-  right: 30px;
-  bottom: 40px;
+  right: 50%;
+  bottom: 20px;
   width: 50px;
   height: 50px;
   background-color: #04be02;
@@ -36,10 +35,11 @@ body {
   border-radius: 50%;
   color: #fff;
   border: none;
+  margin-right: -25px;
 }
 #add-comment {
-  right: 30px;
-  bottom: 40px;
+  right: 50%;
+  bottom: 20px;
   width: 50px;
   height: 50px;
   background-color: #04be02;
@@ -49,6 +49,7 @@ body {
   border-radius: 50%;
   color: #fff;
   border: none;
+  margin-right: -25px;
 }
 .textRed {
   background-color: tomato;
@@ -64,5 +65,21 @@ body {
 }
 .textGray {
   background-color: #E5E5E5;
+}
+.no-more {
+  text-align: center;
+}
+.go-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  background: #ccc;
+  border: none;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  font-size: 20px;
+  line-height: 37px;
 }
 </style>
