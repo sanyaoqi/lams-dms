@@ -6,9 +6,9 @@
     name: 'Home',
     created () {
       // 测试方法
-      this.getTestToken()
+      // this.getTestToken()
       // 登录
-      // this.login()
+      this.login()
     },
     methods: {
       getTestToken: function () {

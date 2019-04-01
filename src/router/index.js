@@ -14,6 +14,8 @@ import ReportList from '../views/ReportList'
 import MyMaintains from '../views/MyMaintains'
 import MyRepairs from '../views/MyRepairs'
 import DevicePage from '../views/DevicePage'
+import DeviceReports from '../views/DeviceReports'
+import DeviceMaintains from '../views/DeviceMaintains'
 
 Vue.use(Router)
 
@@ -79,9 +81,19 @@ const routes = [
     component: MyMaintains
   },
   {
-    path: '/device-page/:id',
-    name: 'device-page',
+    path: '/device/:id',
+    name: 'device',
     component: DevicePage
+  },
+  {
+    path: '/device-reports/:id',
+    name: 'device-reports',
+    component: DeviceReports
+  },
+  {
+    path: '/device-maintains/:id',
+    name: 'device-maintains',
+    component: DeviceMaintains
   },
   {
     path: '/testscoll',

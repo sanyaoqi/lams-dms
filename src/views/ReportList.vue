@@ -4,7 +4,7 @@
       <div class="page panel">
         <div class="page__hd">
           <x-header>我的报修</x-header>
-          <tab>
+          <tab :line-width=2 active-color='#04be02' v-model="tabmodel" :animate="false">
             <tab-item selected @click.native="toMyReports">我的报修</tab-item>
             <tab-item @click.native="toMyRepairs">维修任务</tab-item>
             <tab-item @click.native="toMyMaintains">维护任务</tab-item>
@@ -98,7 +98,8 @@
         maxpage: 0,
         nomore: false,
         loading: false,
-        defaultImage: 'http://lams-1257122319.cos.ap-beijing.myqcloud.com/20190321eec5375f7c984d813051c65f202ca928'
+        defaultImage: 'http://lams-1257122319.cos.ap-beijing.myqcloud.com/20190321eec5375f7c984d813051c65f202ca928',
+        tabmodel: 0
       }
     },
     methods: {

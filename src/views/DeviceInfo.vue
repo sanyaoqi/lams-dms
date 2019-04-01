@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="device-description">{{device.description}}</div>
+    <div class="device-description" v-if="device.description">{{ device.description }}</div>
     <div class="weui-form-preview__bd">
       <p v-if="device.owner.user_nick">
         <label class="weui-form-preview__label">创建者</label>
@@ -23,10 +23,6 @@
         <span class="weui-form-preview__value">{{ device.contact_number }}</span>
       </p>
     </div>
-
-    <router-link :to="{path:'/add-repair', query: {device_id: device.id}}">
-      <button id="add-repair" class="add-repair weui_btn weui_btn_primary">报修</button>
-    </router-link>
   </div>
 </template>
 
@@ -35,10 +31,6 @@
       name: 'DeviceInfo',
       props: {
         device: Object
-      },
-      data () {
-        return {
-        }
       }
     }
 </script>
