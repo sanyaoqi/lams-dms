@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="'/device-view/'+ device.id" class="weui-media-box weui-media-box_appmsg">
+  <router-link :to="'/device/'+ device.id" class="weui-media-box weui-media-box_appmsg">
     <div class="weui-media-box__hd" v-if="device.images">
       <img class="weui-media-box__thumb" :src="device.images" alt="">
     </div>

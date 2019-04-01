@@ -82,7 +82,7 @@ var utils = {
         }
       })
       .catch(function (error) {
-        alert(url)
+        // alert(url)
         console.log(error)
         // alert(error.response)
       })
