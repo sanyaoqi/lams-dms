@@ -1,5 +1,5 @@
 
-const host = 'http://dms.api.olfu.xyz/'
+const host = 'http://api.facility.mymicedb.com/'
 // const host = 'http://api.lams.com/'
 const project = ''
 const prefix = host + project + ''
