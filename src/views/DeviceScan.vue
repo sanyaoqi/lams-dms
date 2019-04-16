@@ -22,7 +22,7 @@ Scan Result:
   import api from '@/api'
   import { Confirm, TransferDomDirective as TransferDom, Group, XSwitch } from 'vux'
   // const REDIRECT_URI = encodeURIComponent(SIGNURL)
-  const SIGNURL = 'http://device.olfu.xyz/device-scan'
+  const SIGNURL = 'http://facility.mymicedb.com/device-scan'
 
   export default {
     name: 'device-scan',
