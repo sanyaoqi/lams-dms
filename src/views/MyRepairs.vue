@@ -112,18 +112,18 @@
         this.loading = true
         this.page = 1
         let url = this.api.repairList + '?page=' + this.page
-        url += '&assignee=' + this.USER.id
+        // url += '&assignee=' + this.USER.id
         this.utils.get(url, this.loadData, this.$vux.confirm)
       },
       onPullingUp () {
         // 模拟上拉 加载更多数据
         if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
-          console.log('上拉加载')
+          // console.log('上拉加载')
           this.page ++
           if (this.page <= this.maxpage) {
             this.loading = true
             let url = this.api.repairList + '?page=' + this.page
-            url += '&assignee=' + this.USER.id
+            // url += '&assignee=' + this.USER.id
             this.utils.get(url, this.addData, this.$vux.confirm)
           } else {
             this.nomore = true

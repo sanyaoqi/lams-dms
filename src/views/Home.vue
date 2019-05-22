@@ -17,12 +17,12 @@
       testlogin: function (response) {
         window.localStorage.setItem('token', response.token)
         window.localStorage.setItem('user', JSON.stringify(response.data))
-        console.log(response.data)
+        // console.log(response.data)
         if (window.localStorage.getItem('token')) {
           // 已经登录
           this.$router.push({path: '/devices'})
         } else {
-          console.log('not login')
+          // console.log('not login')
           // this.TOKEN = window.localStorage.getItem('token')
           // this.USER = JSON.parse(window.localStorage.getItem('user'))
           // console.log('response', this.USER, this.TOKEN)

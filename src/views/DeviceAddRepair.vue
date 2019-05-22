@@ -194,7 +194,11 @@
         let posturl = api.addrepair + '?token=' + window.localStorage.getItem('token')
         console.log(posturl)
         utils.post(posturl, fd, function (response) {
-          self.$router.go(-1)
+          self.error_msg = '成功'
+          self.showConfirm()
+          setTimeout(function () {
+            self.$router.go(-1)
+          }, 3000)
         })
       },
       getDevice (id) {

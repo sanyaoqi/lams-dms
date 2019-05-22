@@ -4,6 +4,7 @@
       <div class="weui-media-box__title" style="color: #333">
         {{ this.maintain.name }} &nbsp;&nbsp;&nbsp;
         <a class="device-maintain-status"
+           v-on:click.stop="onConfirm"
            v-bind:class="{
            'textRed': this.maintain.status == 1,
            'textOrange': this.maintain.status == 2,
@@ -23,20 +24,66 @@
         <a style="position: absolute; left: 40%;" v-if="this.maintain.status == 3">完成时间：{{ this.maintain.end_time_format }}</a>
         <a style="position: absolute; left: 40%;" v-if="this.maintain.status == 2">取消时间：{{ this.maintain.end_time_format }}</a>
       </div>
+      <confirm
+        v-model="confirm"
+        :close-on-confirm="false"
+        :title="$t('提示')"
+        @on-confirm="finishMaintain"
+        @on-cancel="onCancel">
+          <p style="text-align:center;">{{ this.error_msg }}</p>
+      </confirm>
     </div>
   </div>
 </template>
 
 <script>
-  import { Rater } from 'vux'
+  import { Rater, Confirm } from 'vux'
 
   export default {
     name: 'DeviceMaintainList',
     components: {
-      Rater
+      Rater,
+      Confirm
+    },
+    data () {
+      return {
+        error_msg: '',
+        confirm: false
+      }
     },
     props: {
       maintain: Object
+    },
+    methods: {
+        // 滚动到页面顶部
+      onConfirm () {
+        event.stopPropagation()
+        // console.log(this.$vux.confirm)
+        if (this.maintain && this.maintain.id > 0 && this.maintain.status === 1) {
+          this.error_msg = '确认完成？'
+          this.confirm = true
+        }
+      },
+      onCancel () {
+        event.stopPropagation()
+        this.confirm = false
+      },
+      finishMaintain () {
+        event.stopPropagation()
+        this.confirm = false
+        let self = this
+        if (self.maintain && self.maintain.id > 0 && self.maintain.status === 1) {
+          let token = window.localStorage.getItem('token')
+          let url = self.api.finishPlan + '?id=' + self.maintain.id + '&token=' + token
+          self.utils.get(url, function (response) {
+            if (response.code === 200) {
+              let plan = response.data
+              self.maintain.status = plan.status
+              self.maintain.status_name = plan.status_name
+            }
+          }, self.$vux.confirm)
+        }
+      }
     }
   }
 </script>
