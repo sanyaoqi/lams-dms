@@ -20,7 +20,9 @@
                   </div>
                   <div class="weui-media-box__bd">
                     <h4 class="weui-media-box__title">{{ item.description }}</h4>
-                    <p class="weui-media-box__desc" style="padding:5px 0px;">{{ item.created_at_format }} &nbsp; <span class="device-repair-status"
+                    <p class="weui-media-box__desc" style="">报修人：{{ item.user.username }}</p>
+                    <p class="weui-media-box__desc" style="padding:5px 0px;">时间：{{ item.created_at_format }} &nbsp; </p>
+                    <p class="weui-media-box__desc" style="">状态：<span class="device-repair-status"
                        v-bind:class="{
                        'textRed': item.status == 0,
                        'textOrange': item.status == 1,
@@ -28,7 +30,7 @@
                        'textGreen': item.status == 3,
                        'textGray': item.status == 4
                        }">
-                      &nbsp;{{ item.status_name }}&nbsp;
+                      {{ item.status_name }}&nbsp;
                     </span></p>
                   </div>
                 </a>

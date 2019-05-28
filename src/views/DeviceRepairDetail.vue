@@ -1,12 +1,7 @@
 <template>
   <div v-if="reportinfo">
     <x-header>维修记录详情</x-header>
-    <swiper auto :list="demo01_list"
-     v-model="demo01_index" 
-     @on-index-change="demo01_onIndexChange" 
-     class="report-images"></swiper>
-    <!-- ****** 轮播 ****** -->
-    <!-- <swiper loop auto :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange" dots-position="center" :aspect-ratio="300/800"></swiper> -->
+    <device-card v-if="reportinfo.device" :device="reportinfo.device"></device-card>
     <flexbox :gutter="0">
       <flexbox-item :span="6/12" v-if="reporter" >
         <!-- ****** 报修人 ****** -->
@@ -43,6 +38,11 @@
         @click.native="acceptReport">接取</x-button>
       </flexbox-item>
     </flexbox>
+    <!-- ****** 轮播 ****** -->
+    <swiper auto :list="demo01_list"
+     v-model="demo01_index" 
+     @on-index-change="demo01_onIndexChange" 
+     class="report-images"></swiper>    
     <!-- ****** 描述 ****** -->
     <article class="weui-article report-desc">
       <p style="color: #999999;">
@@ -141,6 +141,7 @@
 
 <script>
   import { XHeader, Swiper, SwiperItem, Rater, ViewBox, TransferDom, Confirm, XButton, Flexbox, FlexboxItem } from 'vux'
+  import DeviceCard from '@/views/DeviceCard'
 
   export default {
     name: 'DeviceRepairDetail',
@@ -148,6 +149,7 @@
       TransferDom
     },
     components: {
+      DeviceCard,
       XHeader,
       Swiper,
       SwiperItem,
