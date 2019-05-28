@@ -38,10 +38,12 @@
       </flexbox-item>
     </flexbox>
     <!-- ****** 轮播 ****** -->
-    <swiper auto :list="demo01_list"
+    <div v-if="(demo01_list.length > 0)" style="padding: 15px;">
+      <swiper auto :list="demo01_list"
      v-model="demo01_index" 
      @on-index-change="demo01_onIndexChange" 
-     class="report-images" v-if="demo01_list.lenght > 0"></swiper>    
+     class="report-images" ></swiper>
+    </div>
     <!-- ****** 描述 ****** -->
     <article class="weui-article report-desc">
       <p style="color: #999999;">
@@ -304,6 +306,7 @@
             this.demo01_list.push(image)
           }
         }
+        // console.log(this.reportinfo.image_list.length, this.demo01_list.length)
         if (!this.can_accept_report && !(this.assignee && this.repairinfo)) {
           this.reporterSpan = 0
         }
