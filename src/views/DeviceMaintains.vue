@@ -164,7 +164,7 @@ export default {
 <style lang="less" scoped>
   .position-maintains-box {
     position: fixed;
-    top: 245px;
+    top: 185px;
     bottom: 10px;
     left: 0;
     right: 0;

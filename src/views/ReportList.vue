@@ -47,7 +47,7 @@
       </div>
     </div>
     
-    <button @click="scrollTo" class="go-top weui_btn weui_btn_primary">^</button>
+    <button @click="scrollTo" class="go-top weui_btn weui_btn_primary">↑</button>
   </div>  
 </template>
 

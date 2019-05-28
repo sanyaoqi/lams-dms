@@ -13,6 +13,7 @@ import CommentList from '../views/CommentList'
 import ReportList from '../views/ReportList'
 import MyMaintains from '../views/MyMaintains'
 import MyRepairs from '../views/MyRepairs'
+import Reports from '../views/Reports'
 import DevicePage from '../views/DevicePage'
 import DeviceReports from '../views/DeviceReports'
 import DeviceMaintains from '../views/DeviceMaintains'
@@ -66,8 +67,8 @@ const routes = [
     component: CommentList
   },
   {
-    path: '/reports',
-    name: 'reports',
+    path: '/myreports',
+    name: 'myreports',
     component: ReportList
   },
   {
@@ -94,6 +95,11 @@ const routes = [
     path: '/device-maintains/:id',
     name: 'device-maintains',
     component: DeviceMaintains
+  },
+  {
+    path: '/reports',
+    name: 'reports',
+    component: Reports
   },
   {
     path: '/testscoll',

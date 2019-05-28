@@ -3,26 +3,35 @@
     <div class="container">
       <div class="page panel">
         <div class="page__hd">
-          <x-header>维护任务</x-header>
-          <tab :line-width=2 active-color='#04be02' v-model="tabmodel" :animate="false">
-            <tab-item @click.native="toMyReports">我的报修</tab-item>
-            <tab-item @click.native="toMyRepairs">维修任务</tab-item>
-            <tab-item selected @click.native="toMyMaintains">维护任务</tab-item>
-          </tab>
+          <x-header>报修列表</x-header>
         </div>
         <div class="page__bd">
           <div class="position-report-box">
             <div class="wrapper" ref="wrapper">
               <div class="weui-panel__bd">
-                <group style="height:100%; overflow-y: scroll;" :gutter="0">
-                  <cell-box
-                    v-for="item in items"
-                    :key="item.id + 'maintain'"
-                    :link="'/maintain-detail/' + item.id"
-                    is-link>
-                    <device-maintain-item :maintain="item" ></device-maintain-item>
-                  </cell-box>
-                </group>
+                <a v-for="item in items"
+                 class="weui-media-box weui-media-box_appmsg" 
+                 :href="'/repair-detail/' + item.id" 
+                 :key="item.id">
+                  <div class="weui-media-box__hd">
+                    <img class="weui-media-box__thumb"
+                     :src="(item.image_list.length > 0) ? item.image_list[0] : defaultImage"
+                     alt="" >
+                  </div>
+                  <div class="weui-media-box__bd">
+                    <h4 class="weui-media-box__title">{{ item.description }}</h4>
+                    <p class="weui-media-box__desc" style="padding:5px 0px;">{{ item.created_at_format }} &nbsp; <span class="device-repair-status"
+                       v-bind:class="{
+                       'textRed': item.status == 0,
+                       'textOrange': item.status == 1,
+                       'textBlue': item.status == 2,
+                       'textGreen': item.status == 3,
+                       'textGray': item.status == 4
+                       }">
+                      &nbsp;{{ item.status_name }}&nbsp;
+                    </span></p>
+                  </div>
+                </a>
                 <load-more tip='正在加载' background-color="#fbf9fe" v-if="loading"></load-more>
                 <load-more :show-loading="false" tip="没有更多数据了" background-color="#fbf9fe" v-if="nomore"></load-more>
               </div>
@@ -32,24 +41,20 @@
         <div class="page__ft"></div>
       </div>
     </div>
+    
     <button @click="scrollTo" class="go-top weui_btn weui_btn_primary">↑</button>
   </div>  
 </template>
 
 <script>
   import Bscroll from 'better-scroll'
-  import { XHeader, LoadMore, Tab, TabItem, Group, Cell, CellBox } from 'vux'
-  import DeviceMaintainItem from './DeviceMaintainItem'
+  import { XHeader, LoadMore, Tab, TabItem } from 'vux'
   export default {
     components: {
       XHeader,
       LoadMore,
       Tab,
-      TabItem,
-      DeviceMaintainItem,
-      Group,
-      Cell,
-      CellBox
+      TabItem
     },
     mounted () {
       this.TOKEN = window.localStorage.getItem('token')
@@ -102,8 +107,7 @@
         // console.log('下拉刷新')
         this.loading = true
         this.page = 1
-        let url = this.api.maintain + '?page=' + this.page
-        url += '&user_id=' + this.USER.id
+        let url = this.api.reportList + '?page=' + this.page
         this.utils.get(url, this.loadData, this.$vux.confirm)
       },
       onPullingUp () {
@@ -113,8 +117,7 @@
           this.page ++
           if (this.page <= this.maxpage) {
             this.loading = true
-            let url = this.api.maintain + '?page=' + this.page
-            url += '&user_id=' + this.USER.id
+            let url = this.api.reportList + '?page=' + this.page
             this.utils.get(url, this.addData, this.$vux.confirm)
           } else {
             this.nomore = true
@@ -157,18 +160,6 @@
           self.scroll.finishPullDown()
           self.loading = false
         })
-      },
-      toMyReports () {
-        console.log('toMyReports')
-        this.$router.push({path: '/myreports'})
-      },
-      toMyRepairs () {
-        console.log('toMyRepairs')
-        this.$router.push({path: '/myrepairs'})
-      },
-      toMyMaintains () {
-        console.log('toMyMaintains')
-        // this.$router.push({path: '/mymaintains'})
       }
     }
   }
@@ -181,7 +172,7 @@
   }
   .position-report-box {
     position: fixed;
-    top: 90px;
+    top: 50px;
     bottom: 0;
     left: 0;
     right: 0;

@@ -74,12 +74,12 @@ body {
   bottom: 20px;
   right: 20px;
   border-radius: 50%;
-  background: #ccc;
+  background: #3cc51f;
   border: none;
   width: 30px;
   height: 30px;
   color: #fff;
   font-size: 20px;
-  line-height: 37px;
+  padding-bottom: 3px;
 }
 </style>

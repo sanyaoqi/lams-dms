@@ -18,6 +18,12 @@
         v-if="maintain.starts && maintain.starts > 0">
         </rater> -->
       </div>
+      <div class="weui-media-box__desc" style="margin-top: 5px;" v-if="this.maintain.device">
+        <a >设备：{{ this.maintain.device.name }}</a>
+      </div>
+      <div class="weui-media-box__desc" style="margin-top: 5px;" v-if="this.maintain.device">
+        <a >位置：{{ this.maintain.device.position }}</a>
+      </div>
       <div class="weui-media-box__desc" style="margin-top: 5px;" v-if="this.maintain.user">
         <a >负责人：{{ this.maintain.user.user_nick }}</a>
         <a style="position: absolute; left: 40%;" v-if="this.maintain.status == 1">开始时间：{{ this.maintain.pre_end_time_format }}</a>

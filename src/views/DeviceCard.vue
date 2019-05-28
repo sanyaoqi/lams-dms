@@ -1,7 +1,7 @@
 <template>
   <div>
     <flexbox :gutter="0">
-      <flexbox-item>
+      <flexbox-item :span="2/3">
         <div class="placeholder device-detail-info-bg">
           <div class="weui-panel__bd device-detail-info">
             <div class="weui-media-box weui-media-box_text" v-if="device !== null">
@@ -38,23 +38,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-  .device-detail-info-bg {
-    position: relative; // 使用相对定位
-    height: 0; // 高度设置为0，使用padding来设置高度
-    width: 100%;
-    padding-bottom: 80%;
-    display:block;
-    flex: 0 0 auto;
-  }
-  .device-detail-info {
-    position: absolute;
-    top:50%;
-    transform: translate(0,-50%);
-  }
   #img-bg {
     position: relative; // 使用相对定位
     height: 0; // 高度设置为0，使用padding来设置高度
-    width: 80%;
+    width: 100%;
     padding-bottom: 80%;
     display:block;
     flex: 0 0 auto;
