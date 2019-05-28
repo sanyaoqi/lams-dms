@@ -1,11 +1,10 @@
 <template>
   <div>
     <x-header>维护计划详情</x-header>
-    <swiper :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange"></swiper>
-    <GroupTitle>计划详情</GroupTitle>
+    <swiper :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange" v-if="demo01_list.lenght > 0"></swiper>
+    <device-card v-if="device" :device="device"></device-card>
     <!-- ****** 维修条目 ****** -->
     <div>
-      <div class="plan-description">{{ plan.content }}</div>
       <div class="weui-form-preview__bd plan-detail">
         <p v-if="plan.name">
           <label class="weui-form-preview__label">计划名称</label>
@@ -37,16 +36,18 @@
           <span class="weui-form-preview__value" v-else> 未完成 </span>
         </p>
       </div>
+      <GroupTitle>计划详情</GroupTitle>
+      <div class="plan-description">{{ plan.content }}</div>
       <x-button type="primary" 
         v-if="canFinish" 
         class="btn-finish" @click.native="finishPlan()">完成</x-button>
      </div>
   </div>
-
 </template>
 
 <script>
   import { XHeader, Swiper, SwiperItem, CheckIcon, GroupTitle, XButton } from 'vux'
+  import DeviceCard from '@/views/DeviceCard'
 
   export default {
     name: 'DeviceMaintainDetail',
@@ -56,7 +57,8 @@
       SwiperItem,
       CheckIcon,
       GroupTitle,
-      XButton
+      XButton,
+      DeviceCard
     },
     data () {
       return {

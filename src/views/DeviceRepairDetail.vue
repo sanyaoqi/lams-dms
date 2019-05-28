@@ -3,7 +3,7 @@
     <x-header>维修记录详情</x-header>
     <device-card v-if="reportinfo.device" :device="reportinfo.device"></device-card>
     <flexbox :gutter="0">
-      <flexbox-item :span="6/12" v-if="reporter" >
+      <flexbox-item :span="reporterSpan" v-if="reporter" >
         <!-- ****** 报修人 ****** -->
         <div class="placeholder weui-media-box weui-media-box_appmsg">
           <div class="weui-media-box__hd">
@@ -31,10 +31,9 @@
           </div>
         </div>
       </flexbox-item>
-      <flexbox-item :span="6/12" v-else>
+      <flexbox-item :span="6/12" v-if="can_accept_report">
         <x-button mini type="primary" 
         class="accept-report" 
-        v-if="can_accept_report" 
         @click.native="acceptReport">接取</x-button>
       </flexbox-item>
     </flexbox>
@@ -42,7 +41,7 @@
     <swiper auto :list="demo01_list"
      v-model="demo01_index" 
      @on-index-change="demo01_onIndexChange" 
-     class="report-images"></swiper>    
+     class="report-images" v-if="demo01_list.lenght > 0"></swiper>    
     <!-- ****** 描述 ****** -->
     <article class="weui-article report-desc">
       <p style="color: #999999;">
@@ -181,6 +180,7 @@
         can_repair: false,
         can_accept_report: false,
         can_close: false,
+        reporterSpan: 6 / 12,
         status_list: {
           new: {
             id: 0,
@@ -303,6 +303,9 @@
             // image.title = '' + i
             this.demo01_list.push(image)
           }
+        }
+        if (!this.can_accept_report && !(this.assignee && this.repairinfo)) {
+          this.reporterSpan = 0
         }
       },
       acceptReport () {

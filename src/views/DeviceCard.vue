@@ -1,7 +1,7 @@
 <template>
   <div>
     <flexbox :gutter="0">
-      <flexbox-item :span="2/3">
+      <flexbox-item :span="flexspan">
         <div class="placeholder device-detail-info-bg">
           <div class="weui-panel__bd device-detail-info">
             <div class="weui-media-box weui-media-box_text" v-if="device !== null">
@@ -12,7 +12,7 @@
           </div>
         </div>
       </flexbox-item>
-      <flexbox-item style="padding: 10px;">
+      <flexbox-item style="padding: 10px;" v-if="hasImage">
         <div class="placeholder">
           <div id="img-bg" style="">
             <img slot="header" :src="device.images" v-if="device !== null">
@@ -34,6 +34,20 @@ export default {
   },
   props: {
     device: Object
+  },
+  data () {
+    return {
+      flexspan: 2 / 3,
+      hasImage: 1
+    }
+  },
+  mounted () {
+    console.log(this.device.images)
+    if (this.device.images === '') {
+      this.hasImage = 0
+      this.flexspan = 0
+      console.log(this.flexspan)
+    }
   }
 }
 </script>
