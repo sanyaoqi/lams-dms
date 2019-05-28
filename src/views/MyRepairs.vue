@@ -3,7 +3,7 @@
     <div class="container">
       <div class="page panel">
         <div class="page__hd">
-          <x-header>维修任务</x-header>
+          <x-header :left-options="{showBack: false}">维修任务</x-header>
           <tab :line-width=2 active-color='#04be02' v-model="tabmodel" :animate="false">
             <tab-item @click.native="toMyReports">我的报修</tab-item>
             <tab-item selected @click.native="toMyRepairs">维修任务</tab-item>
@@ -168,22 +168,22 @@
         })
       },
       toMyReports () {
-        console.log('toMyReports')
+        // console.log('toMyReports')
         this.$router.push({path: '/myreports'})
       },
       toMyRepairs () {
-        console.log('toMyRepairs')
+        // console.log('toMyRepairs')
         // this.$router.push({path: '/myrepairs'})
       },
       toMyMaintains () {
-        console.log('toMyMaintains')
+        // console.log('toMyMaintains')
         this.$router.push({path: '/mymaintains'})
       }
     }
   }
 </script>
 
-<style>
+<style scoped>
   .wrapper {
     height: 100%;
     overflow: hidden;

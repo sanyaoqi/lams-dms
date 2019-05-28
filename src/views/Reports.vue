@@ -167,7 +167,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .wrapper {
     height: 100%;
     overflow: hidden;
