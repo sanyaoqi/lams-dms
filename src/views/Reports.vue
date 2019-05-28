@@ -3,7 +3,7 @@
     <div class="container">
       <div class="page panel">
         <div class="page__hd">
-          <x-header>报修列表</x-header>
+          <x-header :left-options="{showBack: false}">报修列表</x-header>
         </div>
         <div class="page__bd">
           <div class="position-report-box">
