@@ -4,11 +4,16 @@
       <div class="page panel">
         <div class="page__hd">
           <x-header :left-options="{showBack: false}">维修任务</x-header>
-          <tab :line-width=2 active-color='#04be02' v-model="tabmodel" :animate="false">
+         <!--  <tab :line-width=2 active-color='#04be02' v-model="tabmodel" :animate="false">
             <tab-item @click.native="toMyReports">我的报修</tab-item>
             <tab-item selected @click.native="toMyRepairs">维修任务</tab-item>
             <tab-item @click.native="toMyMaintains">维护任务</tab-item>
-          </tab>
+          </tab> -->
+          <div style="padding:8px;">
+            <button-tab v-model="defaultStatus">
+              <button-tab-item @on-item-click="changeStatus()" v-for="status in statusList" :key="status.key">{{ status.name }}</button-tab-item>
+            </button-tab>
+          </div>
         </div>
         <div class="page__bd">
           <div class="position-report-box">
@@ -51,13 +56,15 @@
 
 <script>
   import Bscroll from 'better-scroll'
-  import { XHeader, LoadMore, Tab, TabItem } from 'vux'
+  import { XHeader, LoadMore, Tab, TabItem, ButtonTab, ButtonTabItem } from 'vux'
   export default {
     components: {
       XHeader,
       LoadMore,
       Tab,
-      TabItem
+      TabItem,
+      ButtonTab,
+      ButtonTabItem
     },
     mounted () {
       this.$store.commit('setGoback', 'myrepairs')
@@ -98,7 +105,23 @@
         nomore: false,
         loading: false,
         defaultImage: 'http://lams-1257122319.cos.ap-beijing.myqcloud.com/20190321eec5375f7c984d813051c65f202ca928',
-        tabmodel: 0
+        tabmodel: 0,
+        statusList: [
+          {
+            key: -1,
+            name: '全部'
+          },
+          {
+            key: 1,
+            name: '新建'
+          },
+          {
+            key: 3,
+            name: '已完成'
+          }
+        ],
+        defaultStatus: 0,
+        currentStatus: -1
       }
     },
     methods: {
@@ -112,7 +135,10 @@
         this.loading = true
         this.page = 1
         let url = this.api.repairList + '?page=' + this.page
-        // url += '&assignee=' + this.USER.id
+        url += '&assignee=' + this.USER.id
+        if (this.currentStatus >= 0) {
+          url += '&status=' + this.currentStatus
+        }
         this.utils.get(url, this.loadData, this.$vux.confirm)
       },
       onPullingUp () {
@@ -123,7 +149,10 @@
           if (this.page <= this.maxpage) {
             this.loading = true
             let url = this.api.repairList + '?page=' + this.page
-            // url += '&assignee=' + this.USER.id
+            url += '&assignee=' + this.USER.id
+            if (this.currentStatus >= 0) {
+              url += '&status=' + this.currentStatus
+            }
             this.utils.get(url, this.addData, this.$vux.confirm)
           } else {
             this.nomore = true
@@ -132,13 +161,13 @@
       },
       addData (response) {
         // 加载更多数据
-        console.log(response)
+        // console.log(response)
         this.items = this.items.concat(response.data)
         // test
         if (response.pagination.totalCount > 0 && response.pagination.defaultPageSize) {
           this.maxpage = Math.ceil(response.pagination.totalCount / response.pagination.defaultPageSize)
         }
-        console.log(this.maxpage)
+        // console.log(this.maxpage)
         // test
         this.refreshScroll()
       },
@@ -147,7 +176,7 @@
         if (response.pagination.totalCount > 0 && response.pagination.defaultPageSize) {
           this.maxpage = Math.ceil(response.pagination.totalCount / response.pagination.defaultPageSize)
         }
-        console.log(this.maxpage)
+        // console.log(this.maxpage)
         // test
         this.refreshScroll()
       },
@@ -178,6 +207,19 @@
       toMyMaintains () {
         // console.log('toMyMaintains')
         this.$router.push({path: '/mymaintains'})
+      },
+      changeStatus () {
+        // console.log('click butten', this.defaultStatus)
+        if (this.defaultStatus === 0) {
+          this.currentStatus = -1
+        }
+        if (this.defaultStatus === 1) {
+          this.currentStatus = 1
+        }
+        if (this.defaultStatus === 2) {
+          this.currentStatus = 3
+        }
+        this.onPullingDown()
       }
     }
   }
@@ -187,6 +229,13 @@
   .wrapper {
     height: 100%;
     overflow: hidden;
+  }
+  .position-report-box {
+    position: fixed;
+    top: 95px;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
   .weui-media-box:before {
     content: " ";
