@@ -5,6 +5,7 @@
   export default {
     name: 'Home',
     created () {
+      this.autoCloseReport()
       // 测试方法
       // this.getTestToken()
       // 登录
@@ -45,6 +46,12 @@
             window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + CORPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=snsapi_base&agentid=' + AGENTID + '&state=STATE#wechat_redirect'
           }, this.$vux.confirm)
         }
+      },
+      autoCloseReport () {
+        this.utils.get(this.api.autoCloseReport, this.closeReportResult)
+      },
+      closeReportResult (response) {
+        console.log('autoClose:', response)
       }
     },
     data () {

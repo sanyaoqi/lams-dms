@@ -1,6 +1,7 @@
 
 const host = 'http://api.facility.mymicedb.com/'
 // const host = 'http://api.lams.com/'
+// const host = 'http://admtest.facility.mymicedb.com/'
 const project = ''
 const prefix = host + project + ''
 
@@ -31,7 +32,8 @@ let apis = {
   maintain: prefix + 'maintains',
   finishPlan: prefix + 'maintain/finish',
   reportList: prefix + 'reports',
-  repairList: prefix + 'repairs'
+  repairList: prefix + 'repairs',
+  autoCloseReport: prefix + 'report/auto-close-report'
 }
 
 export default apis
