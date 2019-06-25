@@ -13,6 +13,7 @@ import vuexI18n from 'vuex-i18n'
 import testdata from './testdata'
 import utils from './utils'
 import api from './api'
+import gallery from 'img-vuer'
 
 Vue.use(testdata)
 Vue.use(AlertPlugin)
@@ -25,6 +26,8 @@ Vue.use(VueRouter)
 Vue.use(vuexI18n.plugin, store)
 
 Vue.use(LocalePlugin)
+Vue.use(gallery)
+
 const nowLocale = Vue.locale.get()
 // console.log(nowLocale)
 if (/zh/.test(nowLocale)) {

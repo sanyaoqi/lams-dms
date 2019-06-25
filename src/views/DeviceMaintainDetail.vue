@@ -10,6 +10,10 @@
           <label class="weui-form-preview__label">计划名称</label>
           <span class="weui-form-preview__value">{{ plan.name }}</span>
         </p>
+        <p v-if="plan.cycle">
+          <label class="weui-form-preview__label">周期</label>
+          <span class="weui-form-preview__value">{{ plan.cycle + ' ' + plan.cycle_unit }}</span>
+        </p>
         <p v-if="plan.user">
           <label class="weui-form-preview__label">负责人</label>
           <span class="weui-form-preview__value" v-if="plan.user.user_nick">{{ plan.user.user_nick }}</span>

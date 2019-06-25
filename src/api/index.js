@@ -1,4 +1,3 @@
-
 const host = 'http://api.facility.mymicedb.com/'
 // const host = 'http://api.lams.com/'
 // const host = 'http://admtest.facility.mymicedb.com/'

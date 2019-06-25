@@ -4,7 +4,6 @@
     <device-card :device="device"></device-card>
     <div>
       <device-bar :device="device" :index="3"></device-bar>
-
       <div class="position-maintains-box">
         <div class="wrapper" ref="wrapper">
           <div class="weui-panel__bd">
@@ -26,6 +25,7 @@
     <router-link :to="{path:'/add-repair', query: {device_id: device.id}}">
       <button id="add-repair" class="add-repair weui_btn weui_btn_primary">报修</button>
     </router-link>
+    
   </div>
 </template>
 <script>

@@ -30,31 +30,20 @@
         <a style="position: absolute; left: 40%;" v-if="this.maintain.status == 3">完成时间：{{ this.maintain.end_time_format }}</a>
         <a style="position: absolute; left: 40%;" v-if="this.maintain.status == 2">取消时间：{{ this.maintain.end_time_format }}</a>
       </div>
-      <confirm
-        v-model="confirm"
-        :close-on-confirm="false"
-        :title="$t('提示')"
-        @on-confirm="finishMaintain"
-        @on-cancel="onCancel">
-          <p style="text-align:center;">{{ this.error_msg }}</p>
-      </confirm>
     </div>
   </div>
 </template>
 
 <script>
-  import { Rater, Confirm } from 'vux'
+  import { Rater } from 'vux'
 
   export default {
     name: 'DeviceMaintainList',
     components: {
-      Rater,
-      Confirm
+      Rater
     },
     data () {
       return {
-        error_msg: '',
-        confirm: false
       }
     },
     props: {
@@ -66,17 +55,20 @@
         event.stopPropagation()
         // console.log(this.$vux.confirm)
         if (this.maintain && this.maintain.id > 0 && this.maintain.status === 1) {
-          this.error_msg = '确认完成？'
-          this.confirm = true
+          this.$vux.confirm.show({
+            title: '提示',
+            content: '确认完成？',
+            onCancel: this.onCancel,
+            onConfirm: this.finishMaintain
+          })
         }
       },
       onCancel () {
         event.stopPropagation()
-        this.confirm = false
       },
       finishMaintain () {
+        // console.log('post to finish')
         event.stopPropagation()
-        this.confirm = false
         let self = this
         if (self.maintain && self.maintain.id > 0 && self.maintain.status === 1) {
           let token = window.localStorage.getItem('token')
