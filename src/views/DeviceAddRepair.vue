@@ -14,7 +14,7 @@
     <div class="image-list">
       <flexbox :gutter="10" wrap="wrap">
         <flexbox-item :span="2/9" v-for="preview in previews" :key="preview.filekey" class="upload-image">
-          <img :src="preview.fileurl" v-on:click="removeImage(preview.filekey)">
+          <img v-gallery="'group2'" :src="preview.fileurl" v-on:click="removeImage(preview.filekey)">
         </flexbox-item>
         <flexbox-item :span="2/9" class="upload-image">
           <div id="add-image" @click="clickAddImage" v-if="this.previews.length < 5">

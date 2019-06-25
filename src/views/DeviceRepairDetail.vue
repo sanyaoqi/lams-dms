@@ -38,16 +38,16 @@
       </flexbox-item>
     </flexbox>
     <!-- ****** 轮播 ****** -->
-    <!-- <div v-if="(demo01_list.length > 0)" style="padding: 15px;">
+    <div v-if="(demo01_list.length > 0)" style="padding: 15px;">
       <swiper auto :list="demo01_list"
      v-model="demo01_index" 
      @on-index-change="demo01_onIndexChange" 
      class="report-images" 
      height="320px" ></swiper>
-    </div> -->
-    <div v-if="(demo01_list.length > 0)" style="padding: 15px">
-      <img v-gallery="'group1'" v-for="img in demo01_list" :src="img.img" class="thumbnail">
     </div>
+    <!-- <div v-if="(demo01_list.length > 0)" style="padding: 15px">
+      <img v-gallery="'group1'" v-for="img in demo01_list" :src="img.img" class="thumbnail">
+    </div> -->
     <!-- ****** 描述 ****** -->
     <article class="weui-article report-desc">
       <p style="color: #999999;">
@@ -170,13 +170,6 @@
         repair_id: '',
         demo01_index: 0,
         demo01_list: [],
-        preview_list: [{
-          src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg'
-        }, {
-          src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg'
-        }, {
-          src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg'
-        }],
         rater_disabled: false,
         stars: 0,
         comments: [],
