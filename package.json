@@ -14,16 +14,16 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "better-scroll": "^1.15.2",
     "fastclick": "^1.0.6",
-    "img-vuer": "^0.18.0",
+    "v-viewer": "^1.4.1",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.4",
     "vue-router": "^3.0.1",
     "vuex": "^2.1.1",
     "vuex-i18n": "^1.11.0",
-    "vux": "^2.2.0"
+    "vux": "^2.9.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

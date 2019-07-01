@@ -19,5 +19,8 @@ export default {
 @import '~vux/src/styles/reset.less';
 @import '~vux/src/styles/weui/weui.less';
 @import './assets/index.less';
+</style>
 
+<style>
+@import 'viewerjs/dist/viewer.css';
 </style>

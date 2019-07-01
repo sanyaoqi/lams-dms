@@ -13,9 +13,9 @@ import vuexI18n from 'vuex-i18n'
 import testdata from './testdata'
 import utils from './utils'
 import api from './api'
-// import gallery from 'img-vuer'
+import Viewer from 'v-viewer'
 
-// Vue.use(gallery)
+Vue.use(Viewer)
 Vue.use(testdata)
 Vue.use(AlertPlugin)
 Vue.use(ConfirmPlugin)
