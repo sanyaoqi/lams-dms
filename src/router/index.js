@@ -17,6 +17,7 @@ import Reports from '../views/Reports'
 import DevicePage from '../views/DevicePage'
 import DeviceReports from '../views/DeviceReports'
 import DeviceMaintains from '../views/DeviceMaintains'
+import Maintains from '../views/Maintains'
 
 Vue.use(Router)
 
@@ -105,6 +106,11 @@ const routes = [
     path: '/testscoll',
     name: 'testscoll',
     component: TestScrollLoad
+  },
+  {
+    path: '/maintains',
+    name: 'maintains',
+    component: Maintains
   }
 ]
 

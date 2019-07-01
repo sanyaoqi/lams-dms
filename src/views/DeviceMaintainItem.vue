@@ -18,8 +18,8 @@
         v-if="maintain.starts && maintain.starts > 0">
         </rater> -->
       </div>
-      <div class="weui-media-box__desc" style="margin-top: 5px;" v-if="this.maintain.device">
-        <a >设备：{{ this.maintain.device.name }}</a>
+      <div class="weui-media-box__title" style="margin-top: 5px;" v-if="this.maintain.device">
+        <a :href="toLink">设备：{{ this.maintain.device.name }}</a>
       </div>
       <div class="weui-media-box__desc" style="margin-top: 5px;" v-if="this.maintain.device">
         <a >位置：{{ this.maintain.device.position }}</a>
@@ -48,6 +48,11 @@
     },
     props: {
       maintain: Object
+    },
+    computed: {
+      toLink: function () {
+        return '/device-maintains/' + this.maintain.device.id
+      }
     },
     methods: {
         // 滚动到页面顶部
