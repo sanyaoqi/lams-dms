@@ -44,6 +44,13 @@ Vue.prototype.TOKEN = null
 Vue.prototype.utils = utils
 Vue.prototype.api = api
 
+const errorHandler = (error, vm) => {
+  alert(vm)
+  alert(error)
+}
+Vue.config.errorHandler = errorHandler
+Vue.prototype.$throw = (error) => errorHandler(error, this)
+
 /* eslint-disable no-new */
 new Vue({
   router,

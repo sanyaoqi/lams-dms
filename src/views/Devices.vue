@@ -19,25 +19,30 @@
       <div @click="clickScreen" class="weui-media-box__desc" style="float: right;">筛选</div>
     </div>
     <!-- 筛选弹框 -->
-    <div id="screenBg" v-if="isScreenShow">
+    <!-- <div id="screenBg" v-if="isScreenShow">
+    </div> -->
+    <div v-transfer-dom>
+      <popup v-model="isScreenShow" position="right" width="100%">
+        <div id="" v-if="filters.categorys && isScreenShow">
+          <divider style="padding: 15px;">{{ filters.categorys.name }}</divider>
+          <div class="box">
+            <checker v-model="category" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
+              <checker-item v-for="(cate, cate_index) in categorys" :key="cate_index" :value="cate_index">{{ cate }}</checker-item>
+            </checker>
+          </div>
+          <divider style="padding: 15px;">{{ filters.status.name }}</divider>
+          <div class="box">
+            <checker v-model="status" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
+              <checker-item v-for="(status, status_index) in statusList" :key="status_index" :value="status_index">{{ status }}</checker-item>
+            </checker>
+          </div>
+        </div>
+        <div style="padding: 15px;">
+          <x-button @click.native="endScreen" plain type="primary">确定</x-button>
+        </div>
+      </popup>
     </div>
-    <div id="screen" v-if="filters.categorys && isScreenShow">
-      <divider style="padding: 15px;">{{ filters.categorys.name }}</divider>
-      <div class="box">
-        <checker v-model="category" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
-          <checker-item v-for="(cate, cate_index) in categorys" :key="cate_index" :value="cate_index">{{ cate }}</checker-item>
-        </checker>
-      </div>
-      <divider style="padding: 15px;">{{ filters.status.name }}</divider>
-      <div class="box">
-        <checker v-model="status" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
-          <checker-item v-for="(status, status_index) in statusList" :key="status_index" :value="status_index">{{ status }}</checker-item>
-        </checker>
-      </div>
-      <div style="line-height: 50px; border-top: 1px;">
-        <div class="weui-form-preview__btn" @click="endScreen">确定</div>
-      </div>
-    </div>
+
     <!-- 列表 -->
     <div class="position-devices-box">
       <div class="wrapper" ref="wrapper">
@@ -53,20 +58,25 @@
 </template>
 
 <script>
-import { ViewBox, XHeader, Search, Checker, CheckerItem, Divider } from 'vux'
+import { ViewBox, XHeader, Search, Checker, CheckerItem, Divider, XButton, Popup, TransferDom } from 'vux'
 import Bscroll from 'better-scroll'
 import DeviceItem from './DeviceItem'
 import api from '@/api'
 
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
     XHeader,
+    XButton,
     Search,
     ViewBox,
     DeviceItem,
     Checker,
     CheckerItem,
-    Divider
+    Divider,
+    Popup
   },
   mounted () {
     this.$nextTick(() => {
@@ -315,20 +325,17 @@ export default {
     display: block;
     background-color: rgba(0,0,0,0.5);
   }
-  #screen {
-    position: fixed;
-    background-color: white;
-    z-index: 9999;
-  }
   .box {
     padding: 0 15px;
   }
   .demo1-item {
     border: 1px solid #ececec;
     padding: 5px 15px;
+
   }
   .demo1-item-selected {
-    border: 1px solid green;
+    background-color: #A5DE37;
+    border-color: #A5DE37;
   }
   .position-devices-box {
     position: fixed;
