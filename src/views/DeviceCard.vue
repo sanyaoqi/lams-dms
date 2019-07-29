@@ -14,8 +14,7 @@
       </flexbox-item>
       <flexbox-item style="padding: 10px;" v-if="hasImage">
         <div class="placeholder">
-          <div id="img-bg" style="">
-            <img slot="header" :src="device.images" v-if="device !== null">
+          <div id="img-bg" :style="{ background: img_background, 'background-size': background_size }">
           </div>
         </div>
       </flexbox-item>
@@ -38,15 +37,21 @@ export default {
   data () {
     return {
       flexspan: 2 / 3,
-      hasImage: 1
+      hasImage: 1,
+      img_background: '',
+      background_size: ''
     }
   },
   mounted () {
-    console.log(this.device.images)
+    // console.log(this.device.images)
     if (this.device.images === '') {
       this.hasImage = 0
       this.flexspan = 0
-      console.log(this.flexspan)
+      // console.log(this.flexspan)
+    } else {
+      this.img_background = '#ccc url("' + this.device.images + '") no-repeat center'
+      this.background_size = 'auto 100%'
+      // console.log(this.img_background)
     }
   }
 }
@@ -55,7 +60,6 @@ export default {
   #img-bg {
     position: relative; // 使用相对定位
     height: 0; // 高度设置为0，使用padding来设置高度
-    width: 100%;
     padding-bottom: 80%;
     display:block;
     flex: 0 0 auto;

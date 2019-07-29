@@ -1,6 +1,6 @@
 <template>
   <div v-if="reportinfo">
-    <x-header>维修记录详情</x-header>
+    <x-header @on-click-back="goBack" :left-options="{preventGoBack: true}">维修记录详情</x-header>
     <device-card v-if="reportinfo.device" :device="reportinfo.device"></device-card>
     <flexbox :gutter="0">
       <flexbox-item :span="reporterSpan" v-if="reporter" >
@@ -54,6 +54,8 @@
         {{ this.reportinfo.description }}
       </p>
     </article>
+    <!-- ****** 实际报修人 ****** -->
+    <cell v-if="(reportinfo.real_reporter !== null)" title="实际报修人" :value="reportinfo.real_reporter"></cell>
     <!-- ****** 状态+评分 ****** -->
     <div class="report-status">
       <flexbox :gutter="0">
@@ -145,7 +147,7 @@
 </template>
 
 <script>
-  import { XHeader, Swiper, SwiperItem, Rater, ViewBox, TransferDom, Confirm, XButton, Flexbox, FlexboxItem } from 'vux'
+  import { XHeader, Swiper, SwiperItem, Rater, ViewBox, TransferDom, Confirm, XButton, Flexbox, FlexboxItem, Cell } from 'vux'
   import DeviceCard from '@/views/DeviceCard'
 
   export default {
@@ -163,7 +165,8 @@
       Confirm,
       XButton,
       Flexbox,
-      FlexboxItem
+      FlexboxItem,
+      Cell
     },
     data () {
       return {
@@ -424,6 +427,10 @@
       imgShow () {
         const vuer = this.$el.querySelector('.thumbnail').$vuer
         vuer.show()
+      },
+      goBack () {
+        this.$router.back()
+        // console.log(this.$router)
       }
     }
   }

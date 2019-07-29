@@ -1,14 +1,19 @@
 <template>
   <div>
     <x-header>报修</x-header>
-    <swiper :list="demo01_list" v-model="demo01_index" :show-dots="false" @on-index-change="demo01_onIndexChange"></swiper>
+    <div class="device-info">
+      <device-card v-if="device" :device="device"></device-card>
+    </div>
     <datetime
       v-model="value1"
       title="报修日期"
       :readonly='true'></datetime>
     <!-- 维修内容自述 -->
-    <div style="margin: 0px; width: 100%;text-align: center;">
-      <textarea placeholder="请输入文字内容" style="width: 90%; height: 150px; padding: 10px;text-align: left;" v-model="text">{{ this.text }}</textarea>
+    <div style="margin: 0px;text-align: center; padding: 15px;">
+      <textarea placeholder="请输入报修内容" class="repair-content" style="" v-model="text">{{ this.text }}</textarea>
+    </div>
+    <div>
+      <x-input title="实际报修人" v-model="reporterName" :min="2" :max="6" is-type="china-name" placeholder="姓名"></x-input>
     </div>
     <!-- 上传图片 -->
     <div class="image-list">
@@ -40,9 +45,10 @@
 </template>
 
 <script>
-  import { XHeader, Swiper, SwiperItem, Datetime, XButton, dateFormat, Flexbox, FlexboxItem, Confirm } from 'vux'
+  import { XHeader, Swiper, SwiperItem, Datetime, XButton, dateFormat, Flexbox, FlexboxItem, Confirm, XInput } from 'vux'
   import utils from '@/utils'
   import api from '@/api'
+  import DeviceCard from '@/views/DeviceCard'
   // import testdata from '@/testdata'
 
   export default {
@@ -55,7 +61,9 @@
       XButton,
       Flexbox,
       FlexboxItem,
-      Confirm
+      Confirm,
+      DeviceCard,
+      XInput
     },
     mounted () {
       // this.previews = testdata.getData()
@@ -78,7 +86,9 @@
         previews: [],
         localIds: [],
         confirm: false,
-        error_msg: ''
+        error_msg: '',
+        device: null,
+        reporterName: ''
       }
     },
     methods: {
@@ -155,6 +165,7 @@
         fd.append('device_id', this.device_id)
         fd.append('description', this.text)
         fd.append('time', this.value1)
+        fd.append('real_reporter', this.reporterName)
         // 添加了图片
         if (this.previews.length > 0) {
           var imagesStr = ''
@@ -327,5 +338,16 @@
   .vux-flexbox .vux-flexbox-item:first-child {
     margin-left: 10px!important;
     margin-top: 5px!important;
+  }
+  .repair-content {
+    display: block;
+    border: 0;
+    resize: none;
+    width: 100%;
+    color: inherit;
+    font-size: 1em;
+    line-height: inherit;
+    outline: 0;
+    height: 200px;
   }
 </style>
